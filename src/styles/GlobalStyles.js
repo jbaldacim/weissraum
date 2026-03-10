@@ -21,8 +21,19 @@ export const GlobalStyle = createGlobalStyle`
   }
 
   body {
-    line-height: 1.5;
+    background-color: ${({ theme }) => theme.colors.background};
+    color: ${({ theme }) => theme.colors.text};
+    font-family: ${({ theme }) => theme.fonts.sans};
+    line-height: ${({ theme }) => theme.lineHeight.normal};
     -webkit-font-smoothing: antialiased;
+    min-height: 100vh;
+
+
+    display: flex;
+    align-items: center;
+    align-content: center;
+    justify-content: center;
+    justify-items: center;
   }
 
   img, picture, video, canvas, svg {
