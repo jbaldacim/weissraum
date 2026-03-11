@@ -2,7 +2,7 @@ import styled from "styled-components";
 
 const Divider = styled.hr`
   border: none;
-  border-top: ${({ theme }) => `${theme.borders.thin} ${theme.colors.surface}`};
+  border-top: var(--border-thin) var(--color-surface);
   width: 100%;
 `;
 

@@ -8,7 +8,8 @@ export const theme = {
     accentSoft: "#EDF1F7", // pale blue tint — for hover states, selected fields
   },
   fonts: {
-    sans: "'Inter Variable', sans-serif",
+    sans: "'IBM Plex Sans', sans-serif", // UI, headings, labels
+    mono: "'DM Mono', monospace", // user input, form fields
   },
   fontSizes: {
     xs: "0.625rem",
