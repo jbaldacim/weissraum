@@ -24,10 +24,9 @@ export const GlobalStyle = createGlobalStyle`
     background-color: ${({ theme }) => theme.colors.background};
     color: ${({ theme }) => theme.colors.text};
     font-family: ${({ theme }) => theme.fonts.sans};
+    font-weight: ${({ theme }) => theme.fontWeights.regular};
     line-height: ${({ theme }) => theme.lineHeight.normal};
     -webkit-font-smoothing: antialiased;
-    min-height: 100vh;
-
 
     display: flex;
     align-items: center;

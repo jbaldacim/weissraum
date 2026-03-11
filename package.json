@@ -10,6 +10,8 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@fontsource/dm-mono": "^5.2.7",
+    "@fontsource/ibm-plex-sans": "^5.2.8",
     "react": "^19.2.0",
     "react-dom": "^19.2.0",
     "styled-components": "^6.3.11"

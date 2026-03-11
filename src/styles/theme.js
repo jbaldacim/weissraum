@@ -1,11 +1,11 @@
 export const theme = {
   colors: {
-    background: "#f0f03d",
-    surface: "#e5e5e1",
-    text: "#141414",
-    muted: "#787873",
-    accent: "#c97b38",
-    accentDark: "#a05e22",
+    background: "#F5F4F1", // warm parchment — softer than grey, easier on the eyes during reflection
+    surface: "#ECEAE5", // for cards, form fields, subtle section separation
+    text: "#1A1A18", // warm near-black — less clinical than pure #000
+    muted: "#8A8880", // captions, labels, helper text
+    accent: "#2C4A6E", // ink blue — calm, considered, trustworthy
+    accentSoft: "#EDF1F7", // pale blue tint — for hover states, selected fields
   },
   fonts: {
     sans: "'Inter Variable', sans-serif",
@@ -16,26 +16,31 @@ export const theme = {
     md: "1rem",
     lg: "1.25rem",
     xl: "2rem",
-    xxl: "4.5rem",
+    xxl: "3.5rem",
+  },
+  fontWeights: {
+    light: 300,
+    regular: 400,
+    medium: 500,
   },
   letterSpacing: {
-    tight: "-0.03em",
+    tight: "-0.02em",
     normal: "0em",
-    wide: "0.1em",
-    wider: "0.2em",
+    wide: "0.08em",
+    wider: "0.16em",
   },
   lineHeight: {
     tight: 1.1,
-    normal: 1.5,
-    loose: 1.8,
+    normal: 1.6,
+    loose: 1.9,
   },
   space: {
     xs: "0.5rem",
     sm: "1rem",
     md: "2rem",
     lg: "4rem",
-    xl: "8rem",
-    xxl: "16rem",
+    xl: "6rem",
+    xxl: "12rem",
   },
   borders: {
     thin: "1px solid",
