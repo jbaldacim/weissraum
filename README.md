@@ -15,7 +15,7 @@ The foundation. Everything else depends on this layer being solid.
 - [x] `src/styles/theme.js` — design tokens (colors, fonts, spacing, etc.)
 - [x] `src/components/Typography/Text.jsx` — Display, Heading, Lead, Body,
       Label, Caption, InputText
-- [ ] `src/components/Divider/Divider.jsx` — horizontal rule, used for rhythm
+- [x] `src/components/Divider/Divider.jsx` — horizontal rule, used for rhythm
       and section separation
 
 ---
