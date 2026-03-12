@@ -81,12 +81,6 @@ export const GlobalStyle = createGlobalStyle`
     font-weight:      var(--weight-regular);
     line-height:      var(--leading-normal);
     -webkit-font-smoothing: antialiased;
-
-    display:          flex;
-    align-items:      center;
-    align-content:    center;
-    justify-content:  center;
-    justify-items:    center;
   }
 
   img, picture, video, canvas, svg {
