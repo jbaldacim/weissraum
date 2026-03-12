@@ -25,7 +25,7 @@ The foundation. Everything else depends on this layer being solid.
 Smallest interactive or visual units. Self-contained, depend only on the theme.
 
 - [x] `src/components/Button/Button.jsx` — primary, secondary, ghost variants
-- [ ] `src/components/Tag/Tag.jsx` — small uppercase label for categories and
+- [x] `src/components/Tag/Tag.jsx` — small uppercase label for categories and
       status
 - [ ] `src/components/Link/Link.jsx` — styled anchor, respects type system and
       accent colour
