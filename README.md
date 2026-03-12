@@ -36,9 +36,9 @@ Smallest interactive or visual units. Self-contained, depend only on the theme.
 
 Invisible structural components. The skeleton everything else hangs on.
 
-- [ ] `src/components/Layout/Container.jsx` — max-width wrapper, centred,
+- [x] `src/components/Layout/Container.jsx` — max-width wrapper, centred,
       horizontal padding
-- [ ] `src/components/Layout/Grid.jsx` — CSS grid wrapper with column system
+- [x] `src/components/Layout/Grid.jsx` — CSS grid wrapper with column system
 - [ ] `src/components/Layout/Stack.jsx` — vertical flexbox with controlled
       spacing between children
 
