@@ -39,7 +39,7 @@ Invisible structural components. The skeleton everything else hangs on.
 - [x] `src/components/Layout/Container.jsx` — max-width wrapper, centred,
       horizontal padding
 - [x] `src/components/Layout/Grid.jsx` — CSS grid wrapper with column system
-- [ ] `src/components/Layout/Stack.jsx` — vertical flexbox with controlled
+- [x] `src/components/Layout/Stack.jsx` — vertical flexbox with controlled
       spacing between children
 
 ---
