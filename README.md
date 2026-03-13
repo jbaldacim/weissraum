@@ -48,7 +48,7 @@ Invisible structural components. The skeleton everything else hangs on.
 
 Meaningful UI pieces composed from the layers above.
 
-- [ ] `src/components/Form/FloatingLabelField.jsx` — text input with floating
+- [x] `src/components/Form/FloatingLabelField.jsx` — text input with floating
       label, DM Mono input text, ink blue focus state
 - [ ] `src/components/Form/FloatingLabelTextarea.jsx` — multiline variant for
       longer reflections
