@@ -3,7 +3,7 @@ import { createRoot } from "react-dom/client";
 import { ThemeProvider } from "styled-components";
 import { GlobalStyle } from "./styles/GlobalStyles.js";
 import { theme } from "./styles/theme.js";
-import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import { createBrowserRouter, Outlet, RouterProvider } from "react-router-dom";
 
 // Fonts
 import "@fontsource/ibm-plex-sans/300.css";
@@ -15,12 +15,27 @@ import Home from "./views/Home";
 import Archive from "./views/Archive";
 import NewEntry from "./views/NewEntry";
 import Entry from "./views/Entry";
+import Nav from "./components/Nav/Nav.jsx";
+
+function Layout() {
+  return (
+    <>
+      <Nav />
+      <Outlet />
+    </>
+  );
+}
 
 const router = createBrowserRouter([
-  { path: "/", element: <Home /> },
-  { path: "/archive", element: <Archive /> },
-  { path: "/entries/new", element: <NewEntry /> },
-  { path: "/entries/:id", element: <Entry /> },
+  {
+    element: <Layout />,
+    children: [
+      { path: "/", element: <Home /> },
+      { path: "/archive", element: <Archive /> },
+      { path: "/entries/new", element: <NewEntry /> },
+      { path: "/entries/:id", element: <Entry /> },
+    ],
+  },
 ]);
 
 createRoot(document.getElementById("root")).render(
