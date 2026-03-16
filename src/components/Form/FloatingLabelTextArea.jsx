@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import styled from "styled-components";
 
 const Wrapper = styled.div`
@@ -6,7 +6,7 @@ const Wrapper = styled.div`
   width: 100%;
 `;
 
-const Input = styled.input`
+const TextArea = styled.textarea`
   font-family: var(--font-mono);
   font-size: var(--size-md);
   font-weight: var(--weight-regular);
@@ -20,6 +20,10 @@ const Input = styled.input`
   border: none;
   border-bottom: var(--border-thin) var(--color-muted);
   outline: none;
+
+  resize: none;
+  overflow: hidden;
+  field-sizing: content;
 
   transition: border-color 180ms linear;
 
@@ -47,27 +51,40 @@ const Label = styled.label`
   white-space: nowrap;
 `;
 
-function FloatingLabelField({ label, id, ...rest }) {
+function FloatingLabelTextArea({ label, id, ...rest }) {
   const [focused, setFocused] = useState(false);
   const [value, setValue] = useState("");
+  const ref = useRef(null);
 
   const floating = focused || value.length > 0;
+
+  useEffect(() => {
+    const el = ref.current;
+
+    if (!el) return;
+
+    if ("fieldSizing" in el.style) return;
+
+    el.style.height = "auto";
+    el.style.height = `${el.scrollHeight}px`;
+  }, [value]);
 
   return (
     <Wrapper>
       <Label htmlFor={id} $floating={floating} $focused={focused}>
         {label}
       </Label>
-      <Input
+      <TextArea
+        ref={ref}
         id={id}
         value={value}
         onFocus={() => setFocused(true)}
         onBlur={() => setFocused(false)}
         onChange={(e) => setValue(e.target.value)}
         {...rest}
-      />
+      ></TextArea>
     </Wrapper>
   );
 }
 
-export default FloatingLabelField;
+export default FloatingLabelTextArea;
