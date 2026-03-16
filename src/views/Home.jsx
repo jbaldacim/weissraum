@@ -1,4 +1,6 @@
 import AssumptionCard from "../components/Card/AssumptionCard";
+import SectionHeader from "../components/SectionHeader/SectionHeader";
+import Container from "../components/Layout/Container";
 
 const mockEntries = [
   {
@@ -26,18 +28,25 @@ const mockEntries = [
 
 function Home() {
   return (
-    <div style={{ padding: "2rem" }}>
-      {mockEntries.map((entry) => (
-        <AssumptionCard
-          key={entry.id}
-          id={entry.id}
-          assumption={entry.assumption}
-          category={entry.category}
-          status={entry.status}
-          date={entry.date}
-        />
-      ))}
-    </div>
+    <Container>
+      <SectionHeader
+        label="Your entries"
+        heading="Underlying Assumptions"
+        lead="A record of the beliefs you are learning to examine"
+      />
+      <div>
+        {mockEntries.map((entry) => (
+          <AssumptionCard
+            key={entry.id}
+            id={entry.id}
+            assumption={entry.assumption}
+            category={entry.category}
+            status={entry.status}
+            date={entry.date}
+          />
+        ))}
+      </div>
+    </Container>
   );
 }
 
