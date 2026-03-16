@@ -4,6 +4,7 @@ import App from "./App.jsx";
 import { ThemeProvider } from "styled-components";
 import { GlobalStyle } from "./styles/GlobalStyles.js";
 import { theme } from "./styles/theme.js";
+import { BrowserRouter } from "react-router-dom";
 
 // Fonts
 import "@fontsource/ibm-plex-sans/300.css";
@@ -13,9 +14,11 @@ import "@fontsource/dm-mono/400.css";
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
-    <ThemeProvider theme={theme}>
-      <GlobalStyle />
-      <App />
-    </ThemeProvider>
+    <BrowserRouter>
+      <ThemeProvider theme={theme}>
+        <GlobalStyle />
+        <App />
+      </ThemeProvider>
+    </BrowserRouter>
   </StrictMode>,
 );

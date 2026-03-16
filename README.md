@@ -7,6 +7,34 @@ Vibe: Quiet & contemplative · Ink blue accent
 
 ---
 
+## Architecture Decisions
+
+These decisions were made deliberately and should be revisited only with good
+reason.
+
+**Navigation** — React Router with page-based routing. Each entry has its own
+URL (e.g. `/entries/123`), honouring the permanence and identity of each
+assumption as a meaningful document. The browser's back button, bookmarking, and
+direct linking all work naturally as a result.
+
+**Card-to-entry transition** — The `AssumptionCard` navigates to a dedicated
+`Entry` page rather than expanding in place. The View Transition API animates
+the transition between the list and the entry page, preserving spatial
+continuity. This is architecturally cleaner than in-page shared element
+transitions and maps naturally to the page-based routing model.
+
+**Inline editing on the Entry page** — Filled fields render as plain text. Empty
+fields render as `FloatingLabelTextarea` components, quietly inviting completion
+without demanding it. No mode switch, no edit button — progressive disclosure.
+
+**Database** — Relational (PostgreSQL for production, SQLite for local
+development). Categories live in a dedicated `categories` table as a single
+source of truth, preventing inconsistency across entries. All entry fields are
+fetched at once when the Entry page loads — one API call, all fields, no partial
+fetching needed at this scale.
+
+---
+
 ## Layer 1 — Design Tokens & Base
 
 The foundation. Everything else depends on this layer being solid.
@@ -57,6 +85,8 @@ Meaningful UI pieces composed from the layers above.
 - [ ] `src/components/Nav/Nav.jsx` — top navigation bar
 - [ ] `src/components/SectionHeader/SectionHeader.jsx` — label + heading +
       optional lead paragraph
+- [ ] `src/components/Form/FloatingLabelCombobox.jsx` — searchable, creatable
+      dropdown for category selection with floating label
 
 ---
 
@@ -67,9 +97,11 @@ Full page compositions. Each view is assembled from the layers above.
 - [ ] `src/views/Home.jsx` — entry point, recent entries, navigation to new
       entry
 - [ ] `src/views/NewEntry.jsx` — form to log a new underlying assumption
-- [ ] `src/views/Entry.jsx` — view a single saved entry in full
-- [ ] `src/views/Archive.jsx` — list of all past entries, filterable by date or
-      tag
+- [ ] `src/views/Entry.jsx` — view and incrementally complete a single saved
+      entry; filled fields render as text, empty fields render as
+      FloatingLabelTextarea
+- [ ] `src/views/Archive.jsx` — list of all past entries as AssumptionCards,
+      filterable by date or category
 
 ---
 
@@ -93,11 +125,3 @@ Each entry in the tracker maps to the underlying assumptions form structure:
   states only
 - Physical forms always completed first — this app is an archive and access
   layer, not a replacement for the therapeutic process
-
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend using TypeScript
-with type-aware lint rules enabled. Check out the
-[TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts)
-for information on how to integrate TypeScript and
-[`typescript-eslint`](https://typescript-eslint.io) in your project.
