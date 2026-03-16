@@ -80,7 +80,7 @@ Meaningful UI pieces composed from the layers above.
       label, DM Mono input text, ink blue focus state
 - [x] `src/components/Form/FloatingLabelTextarea.jsx` — multiline variant for
       longer reflections
-- [ ] `src/components/Card/AssumptionCard.jsx` — displays a saved underlying
+- [x] `src/components/Card/AssumptionCard.jsx` — displays a saved underlying
       assumption entry
 - [ ] `src/components/Nav/Nav.jsx` — top navigation bar
 - [ ] `src/components/SectionHeader/SectionHeader.jsx` — label + heading +
