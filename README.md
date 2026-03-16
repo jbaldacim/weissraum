@@ -50,7 +50,7 @@ Meaningful UI pieces composed from the layers above.
 
 - [x] `src/components/Form/FloatingLabelField.jsx` — text input with floating
       label, DM Mono input text, ink blue focus state
-- [ ] `src/components/Form/FloatingLabelTextarea.jsx` — multiline variant for
+- [x] `src/components/Form/FloatingLabelTextarea.jsx` — multiline variant for
       longer reflections
 - [ ] `src/components/Card/AssumptionCard.jsx` — displays a saved underlying
       assumption entry
@@ -101,19 +101,3 @@ with type-aware lint rules enabled. Check out the
 [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts)
 for information on how to integrate TypeScript and
 [`typescript-eslint`](https://typescript-eslint.io) in your project.
-
----
-
-**What's different from `FloatingLabelField`**
-
-Three additions: `ref` for the DOM measurement, the `useEffect` with the
-two-step resize logic, and three CSS properties on `Textarea` — `resize: none`
-removes the browser's default drag handle, `overflow: hidden` prevents a
-scrollbar flash during the height transition, and `field-sizing: content` hands
-off to the browser natively where supported.
-
-The label's resting `top` is `var(--space-sm)` rather than `50%` — unlike a
-single-line input, a textarea doesn't have a predictable vertical centre, so we
-anchor the label to the top of the field instead.
-
----
