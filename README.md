@@ -82,7 +82,7 @@ Meaningful UI pieces composed from the layers above.
       longer reflections
 - [x] `src/components/Card/AssumptionCard.jsx` — displays a saved underlying
       assumption entry
-- [ ] `src/components/Nav/Nav.jsx` — top navigation bar
+- [x] `src/components/Nav/Nav.jsx` — top navigation bar
 - [ ] `src/components/SectionHeader/SectionHeader.jsx` — label + heading +
       optional lead paragraph
 - [ ] `src/components/Form/FloatingLabelCombobox.jsx` — searchable, creatable
