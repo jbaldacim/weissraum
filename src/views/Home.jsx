@@ -1,6 +1,7 @@
 import AssumptionCard from "../components/Card/AssumptionCard";
 import SectionHeader from "../components/SectionHeader/SectionHeader";
 import Container from "../components/Layout/Container";
+import FloatingLabelCombobox from "../components/Form/FloatingLabelCombobox";
 
 const mockEntries = [
   {
@@ -33,6 +34,11 @@ function Home() {
         label="Your entries"
         heading="Underlying Assumptions"
         lead="A record of the beliefs you are learning to examine"
+      />
+      <FloatingLabelCombobox
+        label="Category"
+        id="category"
+        categories={["Self-worth", "Relationships", "Control"]}
       />
       <div>
         {mockEntries.map((entry) => (

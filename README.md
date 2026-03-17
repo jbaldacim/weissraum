@@ -85,7 +85,7 @@ Meaningful UI pieces composed from the layers above.
 - [x] `src/components/Nav/Nav.jsx` — top navigation bar
 - [x] `src/components/SectionHeader/SectionHeader.jsx` — label + heading +
       optional lead paragraph
-- [ ] `src/components/Form/FloatingLabelCombobox.jsx` — searchable, creatable
+- [x] `src/components/Form/FloatingLabelCombobox.jsx` — searchable, creatable
       dropdown for category selection with floating label
 
 ---
