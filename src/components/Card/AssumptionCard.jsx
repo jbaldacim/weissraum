@@ -1,13 +1,12 @@
 import { Link, useViewTransitionState } from "react-router-dom";
-import styled from "styled-components";
+import styled, { css } from "styled-components";
 import { Body, Caption } from "../Typography/Text";
 import { CategoryTag, StatusTag } from "../Tag/Tag";
 
 const CardLink = styled(Link)`
   display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: var(--space-md);
+  flex-direction: column;
+  gap: var(--space-sm);
 
   padding: var(--space-sm) 0;
   border-top: var(--border-thin) var(--color-surface);
@@ -15,10 +14,6 @@ const CardLink = styled(Link)`
   text-decoration: none;
 
   transition: border-color 180ms linear;
-
-  &:last-child {
-    border-bottom: var(--border-thin) var(--color-surface);
-  }
 
   &:hover {
     border-top-color: var(--color-muted);
@@ -30,15 +25,19 @@ const Assumption = styled(Body)`
   color: var(--color-text);
 `;
 
-const Meta = styled.div`
+const Meta = css`
   display: flex;
   align-items: center;
   gap: var(--space-xs);
   flex-shrink: 0;
 `;
 
-const Separator = styled(Caption)`
-  color: var(--color-surface);
+const Tags = styled.div`
+  ${Meta}
+`;
+
+const Date = styled.div`
+  ${Meta}
 `;
 
 function AssumptionCard({ id, assumption, category, status, date }) {
@@ -61,13 +60,14 @@ function AssumptionCard({ id, assumption, category, status, date }) {
           : undefined
       }
     >
-      <Assumption>{assumption}</Assumption>
-      <Meta>
+      <Tags>
         <CategoryTag>{category}</CategoryTag>
         <StatusTag $resolved={status === "resolved"}>{status}</StatusTag>
-        <Separator>•</Separator>
+      </Tags>
+      <Assumption>{assumption}</Assumption>
+      <Date>
         <Caption>{date}</Caption>
-      </Meta>
+      </Date>
     </CardLink>
   );
 }
