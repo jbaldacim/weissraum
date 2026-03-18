@@ -1,7 +1,12 @@
 import AssumptionCard from "../components/Card/AssumptionCard";
 import SectionHeader from "../components/SectionHeader/SectionHeader";
 import Container from "../components/Layout/Container";
-import FloatingLabelCombobox from "../components/Form/FloatingLabelCombobox";
+import Stack from "../components/Layout/Stack";
+import Grid, { Col } from "../components/Layout/Grid";
+import { PrimaryButton } from "../components/Button/Button";
+import { Caption, Display, Label } from "../components/Typography/Text";
+import styled from "styled-components";
+import Link from "../components/Link/Link";
 
 const mockEntries = [
   {
@@ -27,31 +32,58 @@ const mockEntries = [
   },
 ];
 
+const lead = <PrimaryButton>New Entry</PrimaryButton>;
+
+const LastCell = styled(Col)`
+  display: flex;
+  flex-direction: column;
+  justify-content: end;
+  & div {
+    display: flex;
+    flex-direction: column;
+  }
+`;
+
 function Home() {
   return (
     <Container>
-      <SectionHeader
-        label="Your entries"
-        heading="Underlying Assumptions"
-        lead="A record of the beliefs you are learning to examine"
-      />
-      <FloatingLabelCombobox
-        label="Category"
-        id="category"
-        categories={["Self-worth", "Relationships", "Control"]}
-      />
-      <div>
-        {mockEntries.map((entry) => (
-          <AssumptionCard
-            key={entry.id}
-            id={entry.id}
-            assumption={entry.assumption}
-            category={entry.category}
-            status={entry.status}
-            date={entry.date}
-          />
-        ))}
-      </div>
+      <Stack $gap="var(--space-xl)">
+        <SectionHeader label="Welcome, João" heading="Heading" lead={lead} />
+
+        <Grid>
+          <Col $span={6}>
+            <Display>20</Display>
+            <Caption>Assumptions registered</Caption>
+          </Col>
+          <Col $span={6}>
+            <Display>35%</Display>
+            <Caption>Resolved</Caption>
+          </Col>
+        </Grid>
+
+        <SectionHeader
+          label="Your recent entries"
+          heading="What's been on your mind lately"
+        />
+
+        <Grid>
+          {mockEntries.map((entry) => (
+            <Col $span={6} key={entry.id}>
+              <AssumptionCard
+                id={entry.id}
+                assumption={entry.assumption}
+                category={entry.category}
+                status={entry.status}
+                date={entry.date}
+              />
+            </Col>
+          ))}
+          <LastCell $span={6}>
+            <Label>View all</Label>
+            <Link href="/archive">Archive →</Link>
+          </LastCell>
+        </Grid>
+      </Stack>
     </Container>
   );
 }
