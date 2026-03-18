@@ -94,7 +94,7 @@ Meaningful UI pieces composed from the layers above.
 
 Full page compositions. Each view is assembled from the layers above.
 
-- [ ] `src/views/Home.jsx` — entry point, recent entries, navigation to new
+- [x] `src/views/Home.jsx` — entry point, recent entries, navigation to new
       entry
 - [ ] `src/views/NewEntry.jsx` — form to log a new underlying assumption
 - [ ] `src/views/Entry.jsx` — view and incrementally complete a single saved
