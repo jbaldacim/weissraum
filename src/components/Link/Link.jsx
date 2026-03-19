@@ -1,6 +1,7 @@
+import { Link as RouterLink } from "react-router-dom";
 import styled from "styled-components";
 
-const Link = styled.a`
+const Link = styled(RouterLink)`
   font-family: var(--font-sans);
   font-size: inherit;
   font-weight: var(--weight-medium);
@@ -20,10 +21,6 @@ const Link = styled.a`
   &:focus-visible {
     outline: 2px solid var(--color-accent);
     outline-offset: 3px;
-  }
-
-  &:visited {
-    color: var(--color-muted);
   }
 `;
 
