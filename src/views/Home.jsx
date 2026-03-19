@@ -7,6 +7,7 @@ import { PrimaryButton } from "../components/Button/Button";
 import { Caption, Display, Label } from "../components/Typography/Text";
 import styled from "styled-components";
 import Link from "../components/Link/Link";
+import { useNavigate } from "react-router-dom";
 
 const mockEntries = [
   {
@@ -32,8 +33,6 @@ const mockEntries = [
   },
 ];
 
-const lead = <PrimaryButton>New Entry</PrimaryButton>;
-
 const LastCell = styled(Col)`
   display: flex;
   flex-direction: column;
@@ -45,11 +44,25 @@ const LastCell = styled(Col)`
 `;
 
 function Home() {
+  const navigate = useNavigate();
+
+  const action = (
+    <PrimaryButton onClick={() => navigate("/entries/new")}>
+      New Entry
+    </PrimaryButton>
+  );
+
   return (
     <Container>
       <Stack $gap="var(--space-xl)">
-        <SectionHeader label="Welcome, João" heading="Heading" lead={lead} />
-
+        <div>
+          <SectionHeader
+            label="Welcome, João"
+            heading="Home"
+            lead="This is some introductory text that belongs to this header"
+            action={action}
+          />
+        </div>
         <Grid>
           <Col $span={6}>
             <Display>20</Display>
@@ -80,7 +93,7 @@ function Home() {
           ))}
           <LastCell $span={6}>
             <Label>View all</Label>
-            <Link href="/archive">Archive →</Link>
+            <Link to="/archive">Archive →</Link>
           </LastCell>
         </Grid>
       </Stack>
