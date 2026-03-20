@@ -37,10 +37,6 @@ const LastCell = styled(Col)`
   display: flex;
   flex-direction: column;
   justify-content: end;
-  & div {
-    display: flex;
-    flex-direction: column;
-  }
 `;
 
 function Home() {
