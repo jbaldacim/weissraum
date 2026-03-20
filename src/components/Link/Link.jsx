@@ -2,6 +2,7 @@ import { Link as RouterLink } from "react-router-dom";
 import styled from "styled-components";
 
 const Link = styled(RouterLink)`
+  width: fit-content;
   font-family: var(--font-sans);
   font-size: inherit;
   font-weight: var(--weight-medium);
