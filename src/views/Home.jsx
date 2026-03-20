@@ -48,21 +48,19 @@ function Home() {
 
   const action = (
     <PrimaryButton onClick={() => navigate("/entries/new")}>
-      New Entry
+      Record a new thought
     </PrimaryButton>
   );
 
   return (
     <Container>
       <Stack $gap="var(--space-xl)">
-        <div>
-          <SectionHeader
-            label="Welcome, João"
-            heading="Home"
-            lead="This is some introductory text that belongs to this header"
-            action={action}
-          />
-        </div>
+        <SectionHeader
+          label="Good to see you, João"
+          heading="How are you thinking today?"
+          lead="A quiet space to examine what you believe, and gently question it."
+          action={action}
+        />
         <Grid>
           <Col $span={6}>
             <Display>20</Display>
