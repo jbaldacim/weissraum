@@ -30,7 +30,7 @@ const Input = styled(Command.Input)`
   }
 `;
 
-const Label = styled.label`
+const FloatingLabel = styled.span`
   font-family: var(--font-sans);
   font-size: ${({ $floating }) =>
     $floating ? "var(--size-sm)" : "var(--size-md)"};
@@ -169,7 +169,7 @@ function FloatingLabelCombobox({ label, id, categories = [], onChange }) {
 
   return (
     <Wrapper>
-      <Command shouldFilter={true}>
+      <Command shouldFilter={true} label={label}>
         {inputValue.length > 0 && (
           <ClearButton
             onClick={handleClear}
@@ -178,15 +178,20 @@ function FloatingLabelCombobox({ label, id, categories = [], onChange }) {
             ×
           </ClearButton>
         )}
-        <Label htmlFor={id} $floating={floating} $focused={focused}>
+        <FloatingLabel
+          $floating={floating}
+          $focused={focused}
+          aria-hidden="true"
+        >
           {label}
-        </Label>
+        </FloatingLabel>
 
         <Popover.Root open={open}>
           <Popover.Anchor asChild>
             <Input
               ref={inputRef}
               id={id}
+              aria-label={label}
               value={inputValue}
               onFocus={handleFocus}
               onBlur={handleBlur}
