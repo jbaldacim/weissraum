@@ -1,4 +1,3 @@
-// TODO - Refactor layout
 import Container from "../components/Layout/Container";
 import Grid, { Col } from "../components/Layout/Grid";
 import Stack from "../components/Layout/Stack";
@@ -32,40 +31,40 @@ function NewEntry() {
           <Col>
             <Heading>The Experiment</Heading>
           </Col>
-          <Col>
+          <Col $span={6}>
             <FloatingLabelTextArea label="Experiment" id="experiment" />
           </Col>
-          <Col>
+          <Col $span={6}>
             <FloatingLabelTextArea label="Predictions" id="predictions" />
           </Col>
-          <Col>
+          <Col $span={6}>
             <FloatingLabelTextArea
               label="Possible problems"
               id="possible-problems"
             />
           </Col>
-          <Col>
+          <Col $span={6}>
             <FloatingLabelTextArea label="Strategies" id="strategies" />
           </Col>
           <Col>
             <Heading>The Results</Heading>
           </Col>
-          <Col>
+          <Col $span={6}>
             <FloatingLabelTextArea label="What happened" id="what-happened" />
           </Col>
-          <Col>
+          <Col $span={6}>
             <FloatingLabelTextArea
               label="Did results match predictions?"
               id="results-vs-predictions"
             />
           </Col>
-          <Col>
+          <Col $span={6}>
             <FloatingLabelTextArea
               label="Anything unexpected?"
               id="unexpected"
             />
           </Col>
-          <Col>
+          <Col $span={6}>
             <FloatingLabelTextArea label="How you coped" id="how-coped" />
           </Col>
           <Col>
