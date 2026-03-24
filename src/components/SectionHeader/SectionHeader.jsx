@@ -1,6 +1,6 @@
 import styled from "styled-components";
 import Stack from "../Layout/Stack";
-import { Heading, Label, Lead } from "../Typography/Text";
+import { Display, Label, Lead } from "../Typography/Text";
 
 const Wrapper = styled.div`
   max-width: 48rem;
@@ -15,7 +15,7 @@ function SectionHeader({ label, heading, lead, action }) {
     <Wrapper>
       <Stack $gap="var(--space-xs)">
         {label && <Label>{label}</Label>}
-        <Heading>{heading}</Heading>
+        <Display>{heading}</Display>
         {lead && <Lead>{lead}</Lead>}
         {action && <ActionWrapper>{action}</ActionWrapper>}
       </Stack>
