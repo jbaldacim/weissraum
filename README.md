@@ -97,7 +97,7 @@ Full page compositions. Each view is assembled from the layers above.
 - [x] `src/views/Home.jsx` — entry point, recent entries, navigation to new
       entry
 - [x] `src/views/NewEntry.jsx` — form to log a new underlying assumption
-- [ ] `src/views/Entry.jsx` — view and incrementally complete a single saved
+- [x] `src/views/Entry.jsx` — view and incrementally complete a single saved
       entry; filled fields render as text, empty fields render as
       FloatingLabelTextarea
 - [ ] `src/views/Archive.jsx` — list of all past entries as AssumptionCards,
