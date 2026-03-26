@@ -107,4 +107,8 @@ export const GlobalStyle = createGlobalStyle`
   #root, #__next {
     isolation: isolate;
   }
+
+  ::view-transition-group(*) {
+    animation-duration: .5s;
+  }
 `;
