@@ -72,4 +72,5 @@ function AssumptionCard({ id, assumption, category, status, date }) {
   );
 }
 
+export { Tags };
 export default AssumptionCard;
