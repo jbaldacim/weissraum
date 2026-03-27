@@ -23,9 +23,17 @@ the transition between the list and the entry page, preserving spatial
 continuity. This is architecturally cleaner than in-page shared element
 transitions and maps naturally to the page-based routing model.
 
-**Inline editing on the Entry page** — Filled fields render as plain text. Empty
-fields render as `FloatingLabelTextarea` components, quietly inviting completion
-without demanding it. No mode switch, no edit button — progressive disclosure.
+**Controlled form primitives** — `FloatingLabelField`, `FloatingLabelTextArea`,
+and `FloatingLabelCombobox` are controlled inputs. Form data lives in the parent
+view, while local component state is reserved for presentation concerns such as
+focus, popover visibility, and textarea sizing. This keeps save, discard, reset,
+validation, and future backend integration straightforward.
+
+**Editable Entry page** — The `Entry` page is a fully editable document view,
+not a mixed read/edit surface. It owns both a saved snapshot and a draft version
+of the entry, allowing the whole form to be revised before committing changes
+through explicit Save and Discard actions. This keeps the interaction quiet and
+predictable while fitting the permanence of a document-like page.
 
 **Database** — Relational (PostgreSQL for production, SQLite for local
 development). Categories live in a dedicated `categories` table as a single
@@ -76,17 +84,17 @@ Invisible structural components. The skeleton everything else hangs on.
 
 Meaningful UI pieces composed from the layers above.
 
-- [x] `src/components/Form/FloatingLabelField.jsx` — text input with floating
-      label, DM Mono input text, ink blue focus state
-- [x] `src/components/Form/FloatingLabelTextarea.jsx` — multiline variant for
-      longer reflections
+- [x] `src/components/Form/FloatingLabelField.jsx` — controlled single-line
+      input with floating label, DM Mono input text, ink blue focus state
+- [x] `src/components/Form/FloatingLabelTextArea.jsx` — controlled multiline
+      variant for longer reflections, with auto-resize behavior
+- [x] `src/components/Form/FloatingLabelCombobox.jsx` — controlled searchable,
+      creatable category input with floating label
 - [x] `src/components/Card/AssumptionCard.jsx` — displays a saved underlying
       assumption entry
 - [x] `src/components/Nav/Nav.jsx` — top navigation bar
-- [x] `src/components/SectionHeader/SectionHeader.jsx` — label + heading +
-      optional lead paragraph
-- [x] `src/components/Form/FloatingLabelCombobox.jsx` — searchable, creatable
-      dropdown for category selection with floating label
+- [x] `src/components/SectionHeader/SectionHeader.jsx` — heading + optional
+      label, lead paragraph and action
 
 ---
 
@@ -96,10 +104,10 @@ Full page compositions. Each view is assembled from the layers above.
 
 - [x] `src/views/Home.jsx` — entry point, recent entries, navigation to new
       entry
-- [x] `src/views/NewEntry.jsx` — form to log a new underlying assumption
-- [x] `src/views/Entry.jsx` — view and incrementally complete a single saved
-      entry; filled fields render as text, empty fields render as
-      FloatingLabelTextarea
+- [x] `src/views/NewEntry.jsx` — controlled form to log a new underlying
+      assumption; parent view owns the full form state
+- [x] `src/views/Entry.jsx` — editable single-entry document view with
+      parent-owned draft state and explicit Save / Discard actions
 - [ ] `src/views/Archive.jsx` — list of all past entries as AssumptionCards,
       filterable by date or category
 
@@ -107,14 +115,28 @@ Full page compositions. Each view is assembled from the layers above.
 
 ## CBT Form Fields Reference
 
-Each entry in the tracker maps to the underlying assumptions form structure:
+Each entry maps to a behavioural experiment structure used to test underlying
+assumptions:
 
-1. **Situation** — what triggered this assumption?
-2. **Assumption** — the underlying belief identified
-3. **Evidence for** — what supports this assumption?
-4. **Evidence against** — what contradicts it?
-5. **Alternative belief** — a more balanced interpretation
-6. **Outcome** — how does the alternative belief feel?
+1. **Assumption** — the underlying belief being tested
+
+### The Experiment
+
+2. **Experiment** — the action taken to test the assumption
+3. **Predictions** — what you expect will happen
+4. **Possible problems** — what could go wrong
+5. **Strategies** — how you plan to cope with those problems
+
+### The Results
+
+6. **What happened** — what actually occurred during the experiment
+7. **Results vs predictions** — how reality compared to your expectations
+8. **Unexpected outcomes** — anything surprising that emerged
+9. **Coping strategies** — how you managed in the moment
+
+### The Conclusion
+
+10. **Alternative assumption** — a more balanced or updated belief
 
 ---
 
@@ -125,3 +147,5 @@ Each entry in the tracker maps to the underlying assumptions form structure:
   states only
 - Physical forms always completed first — this app is an archive and access
   layer, not a replacement for the therapeutic process
+- Layout and actions follow a Swiss/minimalist approach: strong left alignment,
+  restrained hierarchy, and rhythm through spacing rather than decorative UI

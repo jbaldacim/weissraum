@@ -47,23 +47,40 @@ const Label = styled.label`
   white-space: nowrap;
 `;
 
-function FloatingLabelField({ label, id, ...rest }) {
+function FloatingLabelField({
+  label,
+  id,
+  value,
+  onChange,
+  onFocus,
+  onBlur,
+  ...rest
+}) {
   const [focused, setFocused] = useState(false);
-  const [value, setValue] = useState("");
+  const floating = focused || String(value ?? "").length > 0;
 
-  const floating = focused || value.length > 0;
+  function handleFocus(e) {
+    setFocused(true);
+    onFocus?.(e);
+  }
+
+  function handleBlur(e) {
+    setFocused(false);
+    onBlur?.(e);
+  }
 
   return (
     <Wrapper>
       <Label htmlFor={id} $floating={floating} $focused={focused}>
         {label}
       </Label>
+
       <Input
         id={id}
         value={value}
-        onFocus={() => setFocused(true)}
-        onBlur={() => setFocused(false)}
-        onChange={(e) => setValue(e.target.value)}
+        onChange={onChange}
+        onFocus={handleFocus}
+        onBlur={handleBlur}
         {...rest}
       />
     </Wrapper>

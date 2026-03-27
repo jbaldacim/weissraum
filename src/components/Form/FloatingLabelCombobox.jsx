@@ -111,46 +111,52 @@ const ClearButton = styled.button`
   }
 `;
 
-function FloatingLabelCombobox({ label, id, categories = [], onChange }) {
+function FloatingLabelCombobox({
+  label,
+  id,
+  categories = [],
+  value,
+  onChange,
+  onFocus,
+  onBlur,
+}) {
   const [focused, setFocused] = useState(false);
   const [open, setOpen] = useState(false);
-  const [inputValue, setInputValue] = useState("");
-  const [selectedValue, setSelectedValue] = useState("");
   const inputRef = useRef(null);
 
-  const floating = focused || inputValue.length > 0;
+  const currentValue = value ?? "";
+  const floating = focused || currentValue.length > 0;
 
   const exactMatchExists = categories.some(
-    (cat) => cat.toLowerCase() === inputValue.toLowerCase(),
+    (cat) => cat.toLowerCase() === currentValue.toLowerCase(),
   );
 
-  const showCreate = inputValue.length > 0 && !exactMatchExists;
+  const showCreate = currentValue.length > 0 && !exactMatchExists;
 
-  function handleSelect(value) {
-    setSelectedValue(value);
-    setInputValue(value);
+  function handleSelect(nextValue) {
+    onChange?.(nextValue);
     setOpen(false);
-    onChange?.(value);
   }
 
   function handleCreate() {
-    handleSelect(inputValue);
+    handleSelect(currentValue);
   }
 
-  function handleInputChange(value) {
-    setInputValue(value);
-    setSelectedValue("");
+  function handleInputChange(nextValue) {
+    onChange?.(nextValue);
     setOpen(true);
   }
 
-  function handleFocus() {
+  function handleFocus(e) {
     setFocused(true);
     setOpen(true);
+    onFocus?.(e);
   }
 
-  function handleBlur() {
+  function handleBlur(e) {
     setFocused(false);
     setTimeout(() => setOpen(false), 150);
+    onBlur?.(e);
   }
 
   function handleKeyDown(e) {
@@ -161,23 +167,25 @@ function FloatingLabelCombobox({ label, id, categories = [], onChange }) {
   }
 
   function handleClear() {
-    setInputValue("");
-    setSelectedValue("");
+    onChange?.("");
     setOpen(true);
-    inputRef?.current?.focus();
+    inputRef.current?.focus();
   }
 
   return (
     <Wrapper>
-      <Command shouldFilter={true} label={label}>
-        {inputValue.length > 0 && (
+      <Command shouldFilter label={label}>
+        {currentValue.length > 0 && (
           <ClearButton
+            type="button"
             onClick={handleClear}
             onMouseDown={(e) => e.preventDefault()}
+            aria-label={`Clear ${label}`}
           >
             ×
           </ClearButton>
         )}
+
         <FloatingLabel
           $floating={floating}
           $focused={focused}
@@ -192,7 +200,7 @@ function FloatingLabelCombobox({ label, id, categories = [], onChange }) {
               ref={inputRef}
               id={id}
               aria-label={label}
-              value={inputValue}
+              value={currentValue}
               onFocus={handleFocus}
               onBlur={handleBlur}
               onValueChange={handleInputChange}
@@ -208,6 +216,7 @@ function FloatingLabelCombobox({ label, id, categories = [], onChange }) {
             >
               <CommandList>
                 <Empty>No categories found.</Empty>
+
                 <Command.Group>
                   {categories.map((cat) => (
                     <CommandItem
@@ -220,13 +229,14 @@ function FloatingLabelCombobox({ label, id, categories = [], onChange }) {
                     </CommandItem>
                   ))}
                 </Command.Group>
+
                 {showCreate && (
                   <CreateItem
-                    value={`create-${inputValue}`}
+                    value={`create-${currentValue}`}
                     onMouseDown={(e) => e.preventDefault()}
                     onSelect={handleCreate}
                   >
-                    Create "{inputValue}"
+                    Create "{currentValue}"
                   </CreateItem>
                 )}
               </CommandList>
