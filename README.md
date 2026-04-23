@@ -108,7 +108,7 @@ Full page compositions. Each view is assembled from the layers above.
       assumption; parent view owns the full form state
 - [x] `src/views/Entry.jsx` — editable single-entry document view with
       parent-owned draft state and explicit Save / Discard actions
-- [ ] `src/views/Archive.jsx` — list of all past entries as AssumptionCards,
+- [x] `src/views/Archive.jsx` — list of all past entries as AssumptionCards,
       filterable by date or category
 
 ---
@@ -149,3 +149,9 @@ assumptions:
   layer, not a replacement for the therapeutic process
 - Layout and actions follow a Swiss/minimalist approach: strong left alignment,
   restrained hierarchy, and rhythm through spacing rather than decorative UI
+
+## To Do
+
+- [ ] Add return button so view transition works
+- [ ] Add more mock entries
+- [ ] Add pagination on archive to reduce cognitive load

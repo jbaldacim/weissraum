@@ -74,6 +74,10 @@ export const GlobalStyle = createGlobalStyle`
     }
   }
 
+  html {
+    scrollbar-gutter: stable;
+  }
+
   body {
     background-color: var(--color-background);
     color:            var(--color-text);
@@ -81,6 +85,7 @@ export const GlobalStyle = createGlobalStyle`
     font-weight:      var(--weight-regular);
     line-height:      var(--leading-normal);
     -webkit-font-smoothing: antialiased;
+    
   }
 
   img, picture, video, canvas, svg {
