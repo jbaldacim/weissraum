@@ -153,5 +153,6 @@ assumptions:
 ## To Do
 
 - [x] Add return button so view transition works
-- [ ] Add more mock entries
+- [x] Add more mock entries
 - [ ] Add pagination on archive to reduce cognitive load
+- [ ] Add view transition on all pages
