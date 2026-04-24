@@ -19,6 +19,7 @@ import { Heading, Caption, Label } from "../components/Typography/Text";
 import { CategoryTag, StatusTag } from "../components/Tag/Tag";
 import { Tags } from "../components/Card/AssumptionCard";
 import { PrimaryButton, GhostButton } from "../components/Button/Button";
+import BackButton from "../components/Nav/BackButton";
 
 const mockEntries = [
   {
@@ -92,6 +93,7 @@ function Entry() {
   if (!savedEntry || !draft) {
     return (
       <Container>
+        <BackButton />
         <Heading>Entry not found.</Heading>
       </Container>
     );
@@ -116,6 +118,7 @@ function Entry() {
 
   return (
     <Container>
+      <BackButton />
       <Stack $gap="var(--space-lg)">
         <HeaderBlock
           style={
