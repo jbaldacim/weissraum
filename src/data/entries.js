@@ -1,0 +1,186 @@
+import { createEntry } from "../domain/entry.js";
+
+const rawEntries = [
+  {
+    id: "1",
+    assumption: "If I make a mistake, I will be rejected",
+    category: "Self-worth",
+    status: "new",
+    date: "12 Mar 2026",
+    experiment: "",
+    predictions: "",
+    possibleProblems: "",
+    strategies: "",
+    whatHappened: "",
+    resultsVsPredictions: "",
+    unexpectedOutcomes: "",
+    copingStrategies: "",
+    alternativeAssumption: "",
+  },
+  {
+    id: "2",
+    assumption: "I must always be in control or something bad will happen",
+    category: "Control",
+    status: "resolved",
+    date: "10 Mar 2026",
+    experiment: "Let one small plan unfold without over-checking it.",
+    predictions: "Something will go wrong and I will regret it.",
+    possibleProblems: "I may feel anxious if I do not monitor everything.",
+    strategies: "Pause before reacting. Write down what actually happened.",
+    whatHappened:
+      "It felt uncomfortable at first, but nothing serious happened.",
+    resultsVsPredictions:
+      "The outcome was much less catastrophic than I expected.",
+    unexpectedOutcomes: "I felt some relief from not carrying everything.",
+    copingStrategies:
+      "Breathing, slowing down, and delaying my first reaction.",
+    alternativeAssumption:
+      "I can tolerate uncertainty without everything falling apart.",
+  },
+  {
+    id: "3",
+    assumption: "If I am vulnerable, people will take advantage of me",
+    category: "Relationships",
+    status: "new",
+    date: "08 Mar 2026",
+    experiment: "",
+    predictions: "",
+    possibleProblems: "",
+    strategies: "",
+    whatHappened: "",
+    resultsVsPredictions: "",
+    unexpectedOutcomes: "",
+    copingStrategies: "",
+    alternativeAssumption: "",
+  },
+  {
+    id: "4",
+    assumption: "If I say no, people will stop liking me",
+    category: "Relationships",
+    status: "new",
+    date: "07 Mar 2026",
+    experiment: "",
+    predictions: "",
+    possibleProblems: "",
+    strategies: "",
+    whatHappened: "",
+    resultsVsPredictions: "",
+    unexpectedOutcomes: "",
+    copingStrategies: "",
+    alternativeAssumption: "",
+  },
+  {
+    id: "5",
+    assumption: "I need to be productive all the time to be valuable",
+    category: "Self-worth",
+    status: "resolved",
+    date: "05 Mar 2026",
+    experiment: "Take one evening off without doing any productive task.",
+    predictions: "I will feel guilty and fall behind.",
+    possibleProblems: "Strong urge to check tasks or study.",
+    strategies: "Plan rest intentionally and avoid task lists that evening.",
+    whatHappened:
+      "I felt guilty at first, but later felt more rested and focused.",
+    resultsVsPredictions:
+      "The guilt faded and I did not fall behind as expected.",
+    unexpectedOutcomes:
+      "I had more energy the next day and worked more efficiently.",
+    copingStrategies: "Self-talk and reminding myself rest is necessary.",
+    alternativeAssumption:
+      "Rest supports productivity instead of reducing my value.",
+  },
+  {
+    id: "6",
+    assumption: "If things are uncertain, it means something is wrong",
+    category: "Control",
+    status: "new",
+    date: "03 Mar 2026",
+    experiment: "",
+    predictions: "",
+    possibleProblems: "",
+    strategies: "",
+    whatHappened: "",
+    resultsVsPredictions: "",
+    unexpectedOutcomes: "",
+    copingStrategies: "",
+    alternativeAssumption: "",
+  },
+  {
+    id: "7",
+    assumption: "If someone is upset, it is probably my fault",
+    category: "Relationships",
+    status: "new",
+    date: "01 Mar 2026",
+    experiment: "",
+    predictions: "",
+    possibleProblems: "",
+    strategies: "",
+    whatHappened: "",
+    resultsVsPredictions: "",
+    unexpectedOutcomes: "",
+    copingStrategies: "",
+    alternativeAssumption: "",
+  },
+  {
+    id: "8",
+    assumption: "Resting means I am being lazy",
+    category: "Self-worth",
+    status: "resolved",
+    date: "27 Feb 2026",
+    experiment: "Schedule a full rest day with no obligations.",
+    predictions: "I will feel useless and waste time.",
+    possibleProblems: "Feeling restless or trying to justify working.",
+    strategies: "Define rest activities beforehand (reading, walking).",
+    whatHappened:
+      "I initially felt uneasy, but gradually relaxed and enjoyed the day.",
+    resultsVsPredictions:
+      "I did not feel useless; instead I felt mentally refreshed.",
+    unexpectedOutcomes: "I returned to work with more clarity and less stress.",
+    copingStrategies: "Accepting discomfort and reframing rest as recovery.",
+    alternativeAssumption:
+      "Rest is a valid and necessary part of being effective.",
+  },
+  {
+    id: "9",
+    assumption: "If I don’t understand something quickly, I am not capable",
+    category: "Self-worth",
+    status: "new",
+    date: "25 Feb 2026",
+    experiment: "",
+    predictions: "",
+    possibleProblems: "",
+    strategies: "",
+    whatHappened: "",
+    resultsVsPredictions: "",
+    unexpectedOutcomes: "",
+    copingStrategies: "",
+    alternativeAssumption: "",
+  },
+  {
+    id: "10",
+    assumption: "I need to please everyone to avoid conflict",
+    category: "Relationships",
+    status: "resolved",
+    date: "22 Feb 2026",
+    experiment: "Express a mild disagreement in a conversation.",
+    predictions: "The other person will react negatively or reject me.",
+    possibleProblems: "Fear of confrontation and overthinking afterward.",
+    strategies: "Stay calm and focus on expressing my perspective clearly.",
+    whatHappened: "The conversation remained respectful and nothing escalated.",
+    resultsVsPredictions: "The reaction was neutral, not negative as expected.",
+    unexpectedOutcomes: "I felt more confident after expressing my opinion.",
+    copingStrategies: "Grounding myself and avoiding overanalysis afterward.",
+    alternativeAssumption:
+      "I can disagree respectfully without damaging relationships.",
+  },
+];
+
+const entries = rawEntries.map((e) => createEntry(e));
+
+export async function getEntries() {
+  return entries;
+}
+
+export async function getEntryById(id) {
+  return entries.find((e) => e.id === id);
+}

@@ -1,8 +1,6 @@
-export const isNew = (logDate) => {
-  const plainLogDate = Temporal.PlainDate.from(logDate);
-  const elapsedTime = Temporal.Now.plainDateISO()
-    .since(plainLogDate)
-    .total("days");
+export function isEntryNew(entry) {
+  const created = Temporal.Instant.from(entry.createdAt);
+  const now = Temporal.Now.instant();
 
-  return elapsedTime <= 14;
-};
+  return now.since(created).total("days") <= 14;
+}

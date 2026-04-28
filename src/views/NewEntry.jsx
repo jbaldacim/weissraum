@@ -12,6 +12,7 @@ import { PrimaryButton, GhostButton } from "../components/Button/Button";
 
 import styled from "styled-components";
 import Divider from "../components/Divider/Divider";
+import { createEntry } from "../domain/entry";
 
 const categories = ["Self-worth", "Family", "Relationship", "Work"];
 
@@ -22,19 +23,7 @@ const ButtonRow = styled.div`
   gap: var(--space-sm);
 `;
 
-const initialForm = {
-  assumption: "",
-  category: "",
-  experiment: "",
-  predictions: "",
-  possibleProblems: "",
-  strategies: "",
-  whatHappened: "",
-  resultsVsPredictions: "",
-  unexpectedOutcomes: "",
-  copingStrategies: "",
-  alternativeAssumption: "",
-};
+const initialForm = createEntry({});
 
 function NewEntry() {
   const [form, setForm] = useState(initialForm);
