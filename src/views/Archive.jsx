@@ -4,14 +4,25 @@ import Grid, { Col } from "../components/Layout/Grid";
 import Stack from "../components/Layout/Stack";
 import SectionHeader from "../components/SectionHeader/SectionHeader";
 import { getEntries } from "../data/entries";
+import { useEffect, useState } from "react";
 
 function Archive() {
+  const [entries, setEntries] = useState([]);
+
+  useEffect(() => {
+    async function fetchData() {
+      const res = (await getEntries()) || [];
+      setEntries(res);
+    }
+    fetchData();
+  }, []);
+
   return (
     <Container>
       <Stack>
         <SectionHeader label="Archive" heading="Your thoughts" />
         <Grid>
-          {getEntries().map((entry) => (
+          {entries.map((entry) => (
             <Col $span={6} key={entry.id}>
               <AssumptionCard
                 id={entry.id}

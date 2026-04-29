@@ -9,6 +9,7 @@ import styled from "styled-components";
 import Link from "../components/Link/Link";
 import { useNavigate } from "react-router-dom";
 import { getEntries } from "../data/entries";
+import { useEffect, useState } from "react";
 
 const LastCell = styled(Col)`
   display: flex;
@@ -18,9 +19,20 @@ const LastCell = styled(Col)`
 
 function Home() {
   const navigate = useNavigate();
+  const [entries, setEntries] = useState([]);
+
+  useEffect(() => {
+    async function fetchData() {
+      const res = (await getEntries()) || [];
+      setEntries(res);
+    }
+    fetchData();
+  }, []);
 
   const action = (
-    <PrimaryButton onClick={() => navigate("/entries/new")}>Record a new thought</PrimaryButton>
+    <PrimaryButton onClick={() => navigate("/entries/new")}>
+      Record a new thought
+    </PrimaryButton>
   );
 
   return (
@@ -43,22 +55,23 @@ function Home() {
           </Col>
         </Grid>
 
-        <SectionHeader label="Your recent entries" heading="What's been on your mind lately" />
+        <SectionHeader
+          label="Your recent entries"
+          heading="What's been on your mind lately"
+        />
 
         <Grid>
-          {getEntries()
-            .slice(0, 3)
-            .map((entry) => (
-              <Col $span={6} key={entry.id}>
-                <AssumptionCard
-                  id={entry.id}
-                  assumption={entry.assumption}
-                  category={entry.category}
-                  status={entry.status}
-                  date={entry.date}
-                />
-              </Col>
-            ))}
+          {entries.slice(0, 3).map((entry) => (
+            <Col $span={6} key={entry.id}>
+              <AssumptionCard
+                id={entry.id}
+                assumption={entry.assumption}
+                category={entry.category}
+                status={entry.status}
+                date={entry.date}
+              />
+            </Col>
+          ))}
           <LastCell $span={6}>
             <Label>View all</Label>
             <Link to="/archive">Archive →</Link>
