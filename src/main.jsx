@@ -4,6 +4,7 @@ import { ThemeProvider } from "styled-components";
 import { GlobalStyle } from "./styles/GlobalStyles.js";
 import { theme } from "./styles/theme.js";
 import { createBrowserRouter, Outlet, RouterProvider } from "react-router-dom";
+import { entryLoader } from "./views/entry.loader.js";
 
 // Fonts
 import "@fontsource/ibm-plex-sans/300.css";
@@ -16,6 +17,7 @@ import Archive from "./views/Archive";
 import NewEntry from "./views/NewEntry";
 import Entry from "./views/Entry";
 import Nav from "./components/Nav/Nav.jsx";
+import EntryNotFound from "./views/EntryNotFound.jsx";
 
 function Layout() {
   return (
@@ -33,7 +35,12 @@ const router = createBrowserRouter([
       { path: "/", element: <Home /> },
       { path: "/archive", element: <Archive /> },
       { path: "/entries/new", element: <NewEntry /> },
-      { path: "/entries/:id", element: <Entry /> },
+      {
+        path: "/entries/:id",
+        element: <Entry />,
+        loader: entryLoader,
+        errorElement: <EntryNotFound />,
+      },
     ],
   },
 ]);

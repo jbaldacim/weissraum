@@ -1,5 +1,9 @@
 import { useEffect, useMemo, useState } from "react";
-import { useParams, useViewTransitionState } from "react-router-dom";
+import {
+  useLoaderData,
+  useParams,
+  useViewTransitionState,
+} from "react-router-dom";
 
 import Container from "../components/Layout/Container";
 import Grid, { Col } from "../components/Layout/Grid";
@@ -20,7 +24,6 @@ import { CategoryTag, StatusTag } from "../components/Tag/Tag";
 import { Tags } from "../components/Card/AssumptionCard";
 import { PrimaryButton, GhostButton } from "../components/Button/Button";
 import BackButton from "../components/Nav/BackButton";
-import { getEntryById } from "../data/entries";
 import { updateEntry, isEntryResolved } from "../domain/entry";
 
 function Entry() {
@@ -29,25 +32,10 @@ function Entry() {
   const entryPath = `/entries/${id}`;
   const isTransitioning = useViewTransitionState(entryPath);
 
-  const [savedEntry, setSavedEntry] = useState(null);
-  const [draft, setDraft] = useState(null);
-  useEffect(() => {
-    async function fetchData() {
-      const initialEntry = await getEntryById(id);
-      setSavedEntry(initialEntry);
-      setDraft({ ...initialEntry });
-    }
-    fetchData();
-  }, [id]);
+  const entry = useLoaderData();
 
-  if (!savedEntry || !draft) {
-    return (
-      <Container>
-        <BackButton />
-        <Heading>Entry not found.</Heading>
-      </Container>
-    );
-  }
+  const [savedEntry, setSavedEntry] = useState(entry);
+  const [draft, setDraft] = useState({ ...entry });
 
   function updateField(field, value) {
     setDraft((prev) => updateEntry(prev, { [field]: value }));
