@@ -3,7 +3,7 @@ import Container from "../components/Layout/Container";
 import Grid, { Col } from "../components/Layout/Grid";
 import Stack from "../components/Layout/Stack";
 import SectionHeader from "../components/SectionHeader/SectionHeader";
-import { getEntries } from "../data/entries";
+import { getEntries } from "../api/entries";
 import { useEffect, useState } from "react";
 
 function Archive() {

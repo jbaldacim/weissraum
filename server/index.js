@@ -1,4 +1,39 @@
-import { createEntry } from "../domain/entry.js";
+import express from "express";
+import cors from "cors";
+import Database from "better-sqlite3";
+import { createEntry } from "../src/domain/entry.js";
+
+const app = express();
+app.use(cors());
+app.use(express.json());
+
+const db = new Database("server/data.db");
+
+db.exec(`
+  CREATE TABLE IF NOT EXISTS categories (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    name TEXT UNIQUE NOT NULL
+  );
+
+  CREATE TABLE IF NOT EXISTS entries (
+    id TEXT PRIMARY KEY,
+    assumption TEXT NOT NULL,
+    category_id INTEGER NOT NULL REFERENCES categories(id),
+    status TEXT NOT NULL DEFAULT 'new',
+    -- No default for dates — we'll set them manually in ISO format
+    created_at TEXT NOT NULL,
+    updated_at TEXT NOT NULL,
+    experiment TEXT DEFAULT '',
+    predictions TEXT DEFAULT '',
+    possible_problems TEXT DEFAULT '',
+    strategies TEXT DEFAULT '',
+    what_happened TEXT DEFAULT '',
+    results_vs_predictions TEXT DEFAULT '',
+    unexpected_outcomes TEXT DEFAULT '',
+    coping_strategies TEXT DEFAULT '',
+    alternative_assumption TEXT DEFAULT ''
+  );
+`);
 
 const rawEntries = [
   {
@@ -175,12 +210,109 @@ const rawEntries = [
   },
 ];
 
-const entries = rawEntries.map((e) => createEntry(e));
+const existingCount = db
+  .prepare("SELECT COUNT(*) as count FROM entries")
+  .get().count;
+if (existingCount === 0) {
+  const insertCategory = db.prepare(
+    "INSERT OR IGNORE INTO categories (name) VALUES (?)",
+  );
+  const insertEntry = db.prepare(`
+    INSERT INTO entries (id, assumption, category_id, status, experiment, predictions,
+      possible_problems, strategies, what_happened, results_vs_predictions,
+      unexpected_outcomes, coping_strategies, alternative_assumption, created_at, updated_at)
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+  `);
 
-export async function getEntries() {
-  return entries;
+  const now = new Date().toISOString();
+
+  const seed = db.transaction(() => {
+    for (const e of rawEntries) {
+      insertCategory.run(e.category);
+      const catRow = db
+        .prepare("SELECT id FROM categories WHERE name = ?")
+        .get(e.category);
+
+      insertEntry.run(
+        e.id,
+        e.assumption,
+        catRow.id,
+        e.status || "new",
+        e.experiment || "",
+        e.predictions || "",
+        e.possibleProblems || "",
+        e.strategies || "",
+        e.whatHappened || "",
+        e.resultsVsPredictions || "",
+        e.unexpectedOutcomes || "",
+        e.copingStrategies || "",
+        e.alternativeAssumption || "",
+        now,
+        now,
+      );
+    }
+  });
+
+  seed();
+  console.log("Database seeded with initial entries.");
 }
 
-export async function getEntryById(id) {
-  return entries.find((e) => e.id === id);
+function mapEntry(row) {
+  return {
+    id: row.id,
+    assumption: row.assumption,
+    category: row.category_name,
+    status: row.status,
+    date: new Date(row.created_at).toLocaleDateString("pt-BR", {
+      day: "numeric",
+      month: "short",
+      year: "numeric",
+    }),
+    experiment: row.experiment,
+    predictions: row.predictions,
+    possibleProblems: row.possible_problems,
+    strategies: row.strategies,
+    whatHappened: row.what_happened,
+    resultsVsPredictions: row.results_vs_predictions,
+    unexpectedOutcomes: row.unexpected_outcomes,
+    copingStrategies: row.coping_strategies,
+    alternativeAssumption: row.alternative_assumption,
+    createdAt: row.created_at,
+    updatedAt: row.updated_at,
+  };
 }
+
+app.get("/api/entries", (req, res) => {
+  const rows = db
+    .prepare(
+      `
+    SELECT e.*, c.name as category_name
+    FROM entries e
+    JOIN categories c ON e.category_id = c.id
+    ORDER BY e.created_at DESC
+  `,
+    )
+    .all();
+  res.json(rows.map(mapEntry));
+});
+
+app.get("/api/entries/:id", (req, res) => {
+  const row = db
+    .prepare(
+      `
+    SELECT e.*, c.name as category_name
+    FROM entries e
+    JOIN categories c ON e.category_id = c.id
+    WHERE e.id = ?
+  `,
+    )
+    .get(req.params.id);
+
+  if (!row) return res.status(404).json({ error: "Entry not found" });
+  res.json(mapEntry(row));
+});
+
+const PORT = 3001;
+app.listen(PORT, () => {
+  console.log(`API server running at http://localhost:${PORT}`);
+});

@@ -8,7 +8,7 @@ import { Caption, Display, Label } from "../components/Typography/Text";
 import styled from "styled-components";
 import Link from "../components/Link/Link";
 import { useNavigate } from "react-router-dom";
-import { getEntries } from "../data/entries";
+import { getEntries } from "../api/entries";
 import { useEffect, useState } from "react";
 
 const LastCell = styled(Col)`
