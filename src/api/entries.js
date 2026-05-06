@@ -28,3 +28,18 @@ export async function saveEntry(entry) {
 
   return res.json();
 }
+
+export async function updateEntry(id, updates) {
+  const res = await fetch(`/api/entries/${id}`, {
+    method: "PUT",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(updates),
+  });
+
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({}));
+    throw new Error(err.error || "Failed to update entry.");
+  }
+
+  return res.json();
+}

@@ -25,6 +25,7 @@ import { Tags } from "../components/Card/AssumptionCard";
 import { PrimaryButton, GhostButton } from "../components/Button/Button";
 import BackButton from "../components/Nav/BackButton";
 import { updateEntry, isEntryResolved } from "../domain/entry";
+import { updateEntry as updateEntryAPI } from "../api/entries";
 
 function Entry() {
   const { id } = useParams();
@@ -37,12 +38,37 @@ function Entry() {
   const [savedEntry, setSavedEntry] = useState(entry);
   const [draft, setDraft] = useState({ ...entry });
 
+  const [isSaving, setIsSaving] = useState(false);
+
   function updateField(field, value) {
     setDraft((prev) => updateEntry(prev, { [field]: value }));
   }
 
-  function handleSave() {
-    setSavedEntry(draft);
+  async function handleSave() {
+    setIsSaving(true);
+    try {
+      const updated = await updateEntryAPI(draft.id, {
+        assumption: draft.assumption,
+        category: draft.category,
+        status: draft.status,
+        experiment: draft.experiment,
+        predictions: draft.predictions,
+        possibleProblems: draft.possibleProblems,
+        strategies: draft.strategies,
+        whatHappened: draft.whatHappened,
+        resultsVsPredictions: draft.resultsVsPredictions,
+        unexpectedOutcomes: draft.unexpectedOutcomes,
+        copingStrategies: draft.copingStrategies,
+        alternativeAssumption: draft.alternativeAssumption,
+      });
+      setSavedEntry(updated);
+      setDraft(updated);
+    } catch (error) {
+      console.error("Failed to save entry", error);
+      alert("Save failed. Check console.");
+    } finally {
+      setIsSaving(false);
+    }
   }
 
   function handleDiscard() {
@@ -99,8 +125,11 @@ function Entry() {
         </Grid>
 
         <ButtonRow>
-          <PrimaryButton onClick={handleSave} disabled={!hasChanges}>
-            Save changes
+          <PrimaryButton
+            onClick={handleSave}
+            disabled={!hasChanges || isSaving}
+          >
+            {isSaving ? "Saving" : "Save changes"}
           </PrimaryButton>
 
           <GhostButton onClick={handleDiscard} disabled={!hasChanges}>
