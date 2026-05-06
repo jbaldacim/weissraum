@@ -1,5 +1,16 @@
-export async function getEntries() {
-  const res = await fetch("/api/entries");
+export async function getCategories() {
+  const res = await fetch("/api/categories");
+
+  if (!res.ok) throw new Error("Failed to fetch categories.");
+
+  return res.json();
+}
+
+export async function getEntries(categoryId = null) {
+  const url = categoryId
+    ? `/api/entries?category=${encodeURIComponent(categoryId)}`
+    : "/api/entries";
+  const res = await fetch(url);
 
   if (!res.ok) throw new Error("Failed to fetch entries.");
 

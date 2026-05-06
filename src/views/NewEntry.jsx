@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { getCategories, saveEntry } from "../api/entries";
 import Container from "../components/Layout/Container";
 import Grid, { Col } from "../components/Layout/Grid";
 import Stack from "../components/Layout/Stack";
@@ -10,11 +11,8 @@ import { Heading } from "../components/Typography/Text";
 import { PrimaryButton, GhostButton } from "../components/Button/Button";
 import styled from "styled-components";
 import Divider from "../components/Divider/Divider";
-import { saveEntry } from "../api/entries";
 import { createEntry } from "../domain/entry";
 import { useNavigate } from "react-router-dom";
-
-const categories = ["Self-worth", "Family", "Relationship", "Work"];
 
 const ButtonRow = styled.div`
   display: flex;
@@ -28,6 +26,16 @@ const initialForm = createEntry({});
 function NewEntry() {
   const navigate = useNavigate();
   const [form, setForm] = useState(initialForm);
+  const [categories, setCategories] = useState([]);
+
+  useEffect(() => {
+    async function fetchCategories() {
+      const data = await getCategories();
+
+      setCategories(data.map((cat) => cat.name));
+    }
+    fetchCategories();
+  }, []);
 
   function updateField(field, value) {
     setForm((prev) => ({

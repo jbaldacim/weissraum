@@ -282,20 +282,47 @@ function mapEntry(row) {
   };
 }
 
+// Get all categories
+app.get("/api/categories", (req, res) => {
+  const categories = db
+    .prepare("SELECT id, name FROM categories ORDER BY name")
+    .all();
+  res.json(categories);
+});
+
+// Get all entries with their category names, ordered by creation date descending
 app.get("/api/entries", (req, res) => {
-  const rows = db
-    .prepare(
-      `
+  const { category } = req.query;
+  let rows;
+
+  if (category) {
+    rows = db
+      .prepare(
+        `
+      SELECT e.*, c.name AS category_name
+      FROM entries e
+      JOIN categories c on e.category_id = c.id
+      WHERE e.category_id = ?
+      ORDER BY e.created_at DESC
+      `,
+      )
+      .all(category);
+  } else {
+    rows = db
+      .prepare(
+        `
     SELECT e.*, c.name as category_name
     FROM entries e
     JOIN categories c ON e.category_id = c.id
     ORDER BY e.created_at DESC
   `,
-    )
-    .all();
+      )
+      .all();
+  }
   res.json(rows.map(mapEntry));
 });
 
+// Get a single entry by ID
 app.get("/api/entries/:id", (req, res) => {
   const row = db
     .prepare(
@@ -312,6 +339,7 @@ app.get("/api/entries/:id", (req, res) => {
   res.json(mapEntry(row));
 });
 
+// Create a new entry
 app.post("/api/entries", (req, res) => {
   const now = new Date().toISOString();
   const id = crypto.randomUUID();
@@ -374,6 +402,7 @@ app.post("/api/entries", (req, res) => {
   res.status(201).json(mapEntry(newRow));
 });
 
+// Update an entry by ID
 app.put("/api/entries/:id", (req, res) => {
   const entryId = req.params.id;
 
