@@ -13,3 +13,18 @@ export async function getEntryById(id) {
 
   return res.json();
 }
+
+export async function saveEntry(entry) {
+  const res = await fetch("/api/entries", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(entry),
+  });
+
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({}));
+    throw new Error(err.error || "Failed to save entry.");
+  }
+
+  return res.json();
+}

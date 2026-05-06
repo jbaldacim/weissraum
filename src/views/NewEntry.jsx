@@ -1,5 +1,4 @@
 import { useState } from "react";
-
 import Container from "../components/Layout/Container";
 import Grid, { Col } from "../components/Layout/Grid";
 import Stack from "../components/Layout/Stack";
@@ -9,10 +8,11 @@ import FloatingLabelCombobox from "../components/Form/FloatingLabelCombobox";
 import FloatingLabelTextArea from "../components/Form/FloatingLabelTextArea";
 import { Heading } from "../components/Typography/Text";
 import { PrimaryButton, GhostButton } from "../components/Button/Button";
-
 import styled from "styled-components";
 import Divider from "../components/Divider/Divider";
+import { saveEntry } from "../api/entries";
 import { createEntry } from "../domain/entry";
+import { useNavigate } from "react-router-dom";
 
 const categories = ["Self-worth", "Family", "Relationship", "Work"];
 
@@ -26,6 +26,7 @@ const ButtonRow = styled.div`
 const initialForm = createEntry({});
 
 function NewEntry() {
+  const navigate = useNavigate();
   const [form, setForm] = useState(initialForm);
 
   function updateField(field, value) {
@@ -39,8 +40,27 @@ function NewEntry() {
     setForm(initialForm);
   }
 
-  function handleSave() {
-    console.log("Save new entry", form);
+  async function handleSave() {
+    try {
+      const newEntry = await saveEntry({
+        assumption: form.assumption,
+        category: form.category,
+        experiment: form.experiment,
+        predictions: form.predictions,
+        possibleProblems: form.possibleProblems,
+        strategies: form.strategies,
+        whatHappened: form.whatHappened,
+        resultsVsPredictions: form.resultsVsPredictions,
+        unexpectedOutcomes: form.unexpectedOutcomes,
+        copingStrategies: form.copingStrategies,
+        alternativeAssumption: form.alternativeAssumption,
+      });
+
+      navigate(`/entries/${newEntry.id}`);
+    } catch (error) {
+      console.error("Save failed.", error);
+      alert("Failed to save entry. Check console for details.");
+    }
   }
 
   const hasChanges = JSON.stringify(form) !== JSON.stringify(initialForm);

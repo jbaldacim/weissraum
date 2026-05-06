@@ -312,6 +312,68 @@ app.get("/api/entries/:id", (req, res) => {
   res.json(mapEntry(row));
 });
 
+app.post("/api/entries", (req, res) => {
+  const now = new Date().toISOString();
+  const id = crypto.randomUUID();
+
+  let categoryId;
+  const categoryName = req.body.category?.trim();
+
+  if (categoryName) {
+    const existing = db
+      .prepare("SELECT id FROM categories WHERE name = ?")
+      .get(categoryName);
+    if (existing) {
+      categoryId = existing.id;
+    } else {
+      const result = db
+        .prepare("INSERT INTO categories (name) VALUES (?)")
+        .run(categoryName);
+      categoryId = result.lastInsertRowid;
+    }
+  } else {
+    return res.status(400).json({ error: "Category is required." });
+  }
+
+  const stmt = db.prepare(`
+    INSERT INTO entries (id, assumption, category_id, status, experiment,
+      predictions, possible_problems, strategies, what_happened,
+      results_vs_predictions, unexpected_outcomes, coping_strategies,
+      alternative_assumption, created_at, updated_at)
+    VALUES (?, ?, ?, 'new', ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+  `);
+
+  stmt.run(
+    id,
+    req.body.assumption || "",
+    categoryId,
+    req.body.experiment || "",
+    req.body.predictions || "",
+    req.body.possibleProblems || "",
+    req.body.strategies || "",
+    req.body.whatHappened || "",
+    req.body.resultsVsPredictions || "",
+    req.body.unexpectedOutcomes || "",
+    req.body.copingStrategies || "",
+    req.body.alternativeAssumption || "",
+    now,
+    now,
+  );
+
+  const newRow = db
+    .prepare(
+      `
+        SELECT e.*, c.name AS category_name
+        FROM entries e
+        JOIN categories c ON e.category_id = c.id
+        WHERE e.id = ?
+      `,
+    )
+    .get(id);
+
+  res.status(201).json(mapEntry(newRow));
+});
+
 const PORT = 3001;
 app.listen(PORT, () => {
   console.log(`API server running at http://localhost:${PORT}`);
