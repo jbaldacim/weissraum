@@ -17,7 +17,6 @@ import {
 } from "../components/Layout/EntryComponents";
 import SectionHeader from "../components/SectionHeader/SectionHeader";
 import Divider from "../components/Divider/Divider";
-import FloatingLabelField from "../components/Form/FloatingLabelField";
 import FloatingLabelTextArea from "../components/Form/FloatingLabelTextArea";
 import { Heading, Caption, Label } from "../components/Typography/Text";
 import { CategoryTag, StatusTag } from "../components/Tag/Tag";
@@ -48,7 +47,6 @@ function Entry() {
     setIsSaving(true);
     try {
       const updated = await updateEntryAPI(draft.id, {
-        assumption: draft.assumption,
         category: draft.category,
         experiment: draft.experiment,
         predictions: draft.predictions,
@@ -88,9 +86,9 @@ function Entry() {
           }
         >
           <SectionHeader
-            label="Entry"
-            heading="Review and revise this thought"
-            lead="Keep the whole entry editable, then save or discard your changes."
+            label="Assumption"
+            heading={savedEntry.assumption}
+            lead="Everything below can be edited and saved."
           />
 
           <MetaRow>
@@ -111,17 +109,6 @@ function Entry() {
             </DateBlock>
           </MetaRow>
         </HeaderBlock>
-
-        <Grid>
-          <Col $span={8}>
-            <FloatingLabelField
-              label="Tested assumption"
-              id="assumption"
-              value={draft.assumption}
-              onChange={(e) => updateField("assumption", e.target.value)}
-            />
-          </Col>
-        </Grid>
 
         <ButtonRow>
           <PrimaryButton

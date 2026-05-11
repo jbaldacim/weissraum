@@ -451,8 +451,7 @@ app.put("/api/entries/:id", (req, res) => {
 
   const stmt = db.prepare(`
     UPDATE entries
-    SET assumption = ?,
-        category_id = ?,
+    SET category_id = ?,
         experiment = ?,
         predictions = ?,
         possible_problems = ?,
@@ -467,7 +466,6 @@ app.put("/api/entries/:id", (req, res) => {
   `);
 
   stmt.run(
-    req.body.assumption ?? "",
     categoryId,
     req.body.experiment ?? "",
     req.body.predictions ?? "",
