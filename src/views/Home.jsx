@@ -8,7 +8,7 @@ import { Caption, Display, Label } from "../components/Typography/Text";
 import styled from "styled-components";
 import Link from "../components/Link/Link";
 import { useNavigate } from "react-router-dom";
-import { getEntries } from "../api/entries";
+import { getEntries, getEntryStats } from "../api/entries";
 import { useEffect, useState } from "react";
 
 const LastCell = styled(Col)`
@@ -20,17 +20,23 @@ const LastCell = styled(Col)`
 function Home() {
   const navigate = useNavigate();
   const [entries, setEntries] = useState([]);
+  const [total, setTotal] = useState(0);
+  const [resolvedPercent, setResolvedPercent] = useState(0);
 
   useEffect(() => {
     async function fetchData() {
-      const data = await getEntries();
+      const [data, stats] = await Promise.all([getEntries(), getEntryStats()]);
       setEntries(data.entries || []);
+      setTotal(stats.total || 0);
+      setResolvedPercent(stats.resolvedPercent || 0);
     }
     fetchData();
   }, []);
 
   const action = (
-    <PrimaryButton onClick={() =>       navigate("/entries/new", { viewTransition: true })}>
+    <PrimaryButton
+      onClick={() => navigate("/entries/new", { viewTransition: true })}
+    >
       Record a new thought
     </PrimaryButton>
   );
@@ -46,11 +52,11 @@ function Home() {
         />
         <Grid>
           <Col $span={6}>
-            <Display>20</Display>
+            <Display>{total}</Display>
             <Caption>Assumptions registered</Caption>
           </Col>
           <Col $span={6}>
-            <Display>35%</Display>
+            <Display>{resolvedPercent}%</Display>
             <Caption>Resolved</Caption>
           </Col>
         </Grid>
@@ -74,7 +80,9 @@ function Home() {
           ))}
           <LastCell $span={6}>
             <Label>View all</Label>
-            <Link to="/archive" viewTransition>Archive →</Link>
+            <Link to="/archive" viewTransition>
+              Archive →
+            </Link>
           </LastCell>
         </Grid>
       </Stack>

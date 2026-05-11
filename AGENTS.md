@@ -22,7 +22,7 @@ Vite proxies `/api/*` to `http://localhost:3001`.
 ## Architecture
 
 - **Entrypoint** — `src/main.jsx` (routing via `createBrowserRouter`). `App.jsx` is empty.
-- **Server** — `server/index.js`, all API logic inline. Imports `createEntry` from `src/domain/entry.js`.
+- **Server** — `server/index.js`, all API logic inline.
 - **API client** — `src/api/entries.js` uses bare `fetch`, no React Query or SWR.
 - **Domain** — `src/domain/entry.js` uses the TC39 `Temporal` API (no polyfill in deps — may need `@js-temporal/polyfill` at runtime).
 - **Styling** — styled-components with `ThemeProvider`. Theme tokens (`theme.js`) are also mirrored as CSS custom properties via `GlobalStyles.js` (e.g., `var(--space-sm)`, `var(--color-surface)`).

@@ -1,7 +1,6 @@
 export function createEntry(data) {
   return {
     id: crypto.randomUUID(),
-    status: "new",
     createdAt: Temporal.Now.instant().toString(),
     updatedAt: Temporal.Now.instant().toString(),
 
@@ -33,5 +32,5 @@ export function updateEntry(entry, updates) {
 }
 
 export function isEntryResolved(entry) {
-  return entry.status === "resolved";
+  return !!(entry.alternativeAssumption?.trim());
 }

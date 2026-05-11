@@ -1,7 +1,6 @@
 import express from "express";
 import cors from "cors";
 import Database from "better-sqlite3";
-import { createEntry } from "../src/domain/entry.js";
 
 const app = express();
 app.use(cors());
@@ -19,7 +18,6 @@ db.exec(`
     id TEXT PRIMARY KEY,
     assumption TEXT NOT NULL,
     category_id INTEGER NOT NULL REFERENCES categories(id),
-    status TEXT NOT NULL DEFAULT 'new',
     -- No default for dates — we'll set them manually in ISO format
     created_at TEXT NOT NULL,
     updated_at TEXT NOT NULL,
@@ -40,7 +38,6 @@ const rawEntries = [
     id: "1",
     assumption: "If I make a mistake, I will be rejected",
     category: "Self-worth",
-    status: "new",
     date: "12 Mar 2026",
     experiment: "",
     predictions: "",
@@ -56,7 +53,6 @@ const rawEntries = [
     id: "2",
     assumption: "I must always be in control or something bad will happen",
     category: "Control",
-    status: "resolved",
     date: "10 Mar 2026",
     experiment: "Let one small plan unfold without over-checking it.",
     predictions: "Something will go wrong and I will regret it.",
@@ -76,7 +72,6 @@ const rawEntries = [
     id: "3",
     assumption: "If I am vulnerable, people will take advantage of me",
     category: "Relationships",
-    status: "new",
     date: "08 Mar 2026",
     experiment: "",
     predictions: "",
@@ -92,7 +87,6 @@ const rawEntries = [
     id: "4",
     assumption: "If I say no, people will stop liking me",
     category: "Relationships",
-    status: "new",
     date: "07 Mar 2026",
     experiment: "",
     predictions: "",
@@ -108,7 +102,6 @@ const rawEntries = [
     id: "5",
     assumption: "I need to be productive all the time to be valuable",
     category: "Self-worth",
-    status: "resolved",
     date: "05 Mar 2026",
     experiment: "Take one evening off without doing any productive task.",
     predictions: "I will feel guilty and fall behind.",
@@ -128,7 +121,6 @@ const rawEntries = [
     id: "6",
     assumption: "If things are uncertain, it means something is wrong",
     category: "Control",
-    status: "new",
     date: "03 Mar 2026",
     experiment: "",
     predictions: "",
@@ -144,7 +136,6 @@ const rawEntries = [
     id: "7",
     assumption: "If someone is upset, it is probably my fault",
     category: "Relationships",
-    status: "new",
     date: "01 Mar 2026",
     experiment: "",
     predictions: "",
@@ -160,7 +151,6 @@ const rawEntries = [
     id: "8",
     assumption: "Resting means I am being lazy",
     category: "Self-worth",
-    status: "resolved",
     date: "27 Feb 2026",
     experiment: "Schedule a full rest day with no obligations.",
     predictions: "I will feel useless and waste time.",
@@ -179,7 +169,6 @@ const rawEntries = [
     id: "9",
     assumption: "If I don’t understand something quickly, I am not capable",
     category: "Self-worth",
-    status: "new",
     date: "25 Feb 2026",
     experiment: "",
     predictions: "",
@@ -195,7 +184,6 @@ const rawEntries = [
     id: "10",
     assumption: "I need to please everyone to avoid conflict",
     category: "Relationships",
-    status: "resolved",
     date: "22 Feb 2026",
     experiment: "Express a mild disagreement in a conversation.",
     predictions: "The other person will react negatively or reject me.",
@@ -218,10 +206,10 @@ if (existingCount === 0) {
     "INSERT OR IGNORE INTO categories (name) VALUES (?)",
   );
   const insertEntry = db.prepare(`
-    INSERT INTO entries (id, assumption, category_id, status, experiment, predictions,
+    INSERT INTO entries (id, assumption, category_id, experiment, predictions,
       possible_problems, strategies, what_happened, results_vs_predictions,
       unexpected_outcomes, coping_strategies, alternative_assumption, created_at, updated_at)
-    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
   `);
 
   const now = new Date().toISOString();
@@ -237,7 +225,6 @@ if (existingCount === 0) {
         e.id,
         e.assumption,
         catRow.id,
-        e.status || "new",
         e.experiment || "",
         e.predictions || "",
         e.possibleProblems || "",
@@ -262,7 +249,7 @@ function mapEntry(row) {
     id: row.id,
     assumption: row.assumption,
     category: row.category_name,
-    status: row.status,
+    status: row.alternative_assumption ? "resolved" : "unresolved",
     date: new Date(row.created_at).toLocaleDateString("pt-BR", {
       day: "numeric",
       month: "short",
@@ -335,6 +322,21 @@ app.get("/api/entries", (req, res) => {
   });
 });
 
+// Get entry stats (total count, resolved count)
+app.get("/api/entries/stats", (req, res) => {
+  const total = db.prepare("SELECT COUNT(*) as count FROM entries").get().count;
+  const resolved = db
+    .prepare(
+      "SELECT COUNT(*) as count FROM entries WHERE alternative_assumption IS NOT NULL AND alternative_assumption != ''",
+    )
+    .get().count;
+  res.json({
+    total,
+    resolved,
+    resolvedPercent: total > 0 ? Math.round((resolved / total) * 100) : 0,
+  });
+});
+
 // Get a single entry by ID
 app.get("/api/entries/:id", (req, res) => {
   const row = db
@@ -377,11 +379,11 @@ app.post("/api/entries", (req, res) => {
   }
 
   const stmt = db.prepare(`
-    INSERT INTO entries (id, assumption, category_id, status, experiment,
+    INSERT INTO entries (id, assumption, category_id, experiment,
       predictions, possible_problems, strategies, what_happened,
       results_vs_predictions, unexpected_outcomes, coping_strategies,
       alternative_assumption, created_at, updated_at)
-    VALUES (?, ?, ?, 'new', ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
   `);
 
   stmt.run(
@@ -451,7 +453,6 @@ app.put("/api/entries/:id", (req, res) => {
     UPDATE entries
     SET assumption = ?,
         category_id = ?,
-        status = ?,
         experiment = ?,
         predictions = ?,
         possible_problems = ?,
@@ -468,7 +469,6 @@ app.put("/api/entries/:id", (req, res) => {
   stmt.run(
     req.body.assumption ?? "",
     categoryId,
-    req.body.status ?? "new",
     req.body.experiment ?? "",
     req.body.predictions ?? "",
     req.body.possibleProblems ?? "",

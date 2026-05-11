@@ -50,7 +50,6 @@ function Entry() {
       const updated = await updateEntryAPI(draft.id, {
         assumption: draft.assumption,
         category: draft.category,
-        status: draft.status,
         experiment: draft.experiment,
         predictions: draft.predictions,
         possibleProblems: draft.possibleProblems,

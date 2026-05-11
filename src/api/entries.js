@@ -1,3 +1,11 @@
+export async function getEntryStats() {
+  const res = await fetch("/api/entries/stats");
+
+  if (!res.ok) throw new Error("Failed to fetch entry stats.");
+
+  return res.json();
+}
+
 export async function getCategories() {
   const res = await fetch("/api/categories");
 
