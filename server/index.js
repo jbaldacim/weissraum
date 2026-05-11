@@ -292,34 +292,47 @@ app.get("/api/categories", (req, res) => {
 
 // Get all entries with their category names, ordered by creation date descending
 app.get("/api/entries", (req, res) => {
-  const { category } = req.query;
+  const { category, page = "1", limit = "10" } = req.query;
+  const pageNum = Math.max(1, parseInt(page, 10) || 1);
+  const limitNum = Math.max(1, Math.min(100, parseInt(limit, 10) || 10));
+  const offset = (pageNum - 1) * limitNum;
+
+  let total;
   let rows;
 
   if (category) {
+    total = db
+      .prepare("SELECT COUNT(*) as total FROM entries WHERE category_id = ?")
+      .get(category).total;
     rows = db
       .prepare(
-        `
-      SELECT e.*, c.name AS category_name
-      FROM entries e
-      JOIN categories c on e.category_id = c.id
-      WHERE e.category_id = ?
-      ORDER BY e.created_at DESC
-      `,
+        `SELECT e.*, c.name AS category_name
+       FROM entries e
+       JOIN categories c on e.category_id = c.id
+       WHERE e.category_id = ?
+       ORDER BY e.created_at DESC
+       LIMIT ? OFFSET ?`,
       )
-      .all(category);
+      .all(category, limitNum, offset);
   } else {
+    total = db.prepare("SELECT COUNT(*) as total FROM entries").get().total;
     rows = db
       .prepare(
-        `
-    SELECT e.*, c.name as category_name
-    FROM entries e
-    JOIN categories c ON e.category_id = c.id
-    ORDER BY e.created_at DESC
-  `,
+        `SELECT e.*, c.name as category_name
+     FROM entries e
+     JOIN categories c ON e.category_id = c.id
+     ORDER BY e.created_at DESC
+     LIMIT ? OFFSET ?`,
       )
-      .all();
+      .all(limitNum, offset);
   }
-  res.json(rows.map(mapEntry));
+
+  res.json({
+    entries: rows.map(mapEntry),
+    total,
+    page: pageNum,
+    limit: limitNum,
+  });
 });
 
 // Get a single entry by ID

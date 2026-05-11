@@ -6,11 +6,12 @@ export async function getCategories() {
   return res.json();
 }
 
-export async function getEntries(categoryId = null) {
-  const url = categoryId
-    ? `/api/entries?category=${encodeURIComponent(categoryId)}`
-    : "/api/entries";
-  const res = await fetch(url);
+export async function getEntries(categoryId = null, page = 1, limit = 10) {
+  const params = new URLSearchParams();
+  if (categoryId) params.set("category", categoryId);
+  params.set("page", page);
+  params.set("limit", limit);
+  const res = await fetch(`/api/entries?${params}`);
 
   if (!res.ok) throw new Error("Failed to fetch entries.");
 

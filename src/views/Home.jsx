@@ -23,8 +23,8 @@ function Home() {
 
   useEffect(() => {
     async function fetchData() {
-      const res = (await getEntries()) || [];
-      setEntries(res);
+      const data = await getEntries();
+      setEntries(data.entries || []);
     }
     fetchData();
   }, []);
