@@ -30,7 +30,7 @@ function Home() {
   }, []);
 
   const action = (
-    <PrimaryButton onClick={() => navigate("/entries/new")}>
+    <PrimaryButton onClick={() =>       navigate("/entries/new", { viewTransition: true })}>
       Record a new thought
     </PrimaryButton>
   );
@@ -74,7 +74,7 @@ function Home() {
           ))}
           <LastCell $span={6}>
             <Label>View all</Label>
-            <Link to="/archive">Archive →</Link>
+            <Link to="/archive" viewTransition>Archive →</Link>
           </LastCell>
         </Grid>
       </Stack>

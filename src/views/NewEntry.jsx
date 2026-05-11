@@ -64,7 +64,7 @@ function NewEntry() {
         alternativeAssumption: form.alternativeAssumption,
       });
 
-      navigate(`/entries/${newEntry.id}`);
+      navigate(`/entries/${newEntry.id}`, { viewTransition: true });
     } catch (error) {
       console.error("Save failed.", error);
       alert("Failed to save entry. Check console for details.");
