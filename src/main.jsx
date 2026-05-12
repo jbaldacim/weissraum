@@ -3,7 +3,7 @@ import { createRoot } from "react-dom/client";
 import { ThemeProvider } from "styled-components";
 import { GlobalStyle } from "./styles/GlobalStyles.js";
 import { theme } from "./styles/theme.js";
-import { createBrowserRouter, Outlet, RouterProvider } from "react-router-dom";
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import { entryLoader } from "./views/entry.loader.js";
 
 // Fonts
@@ -16,17 +16,8 @@ import Home from "./views/Home";
 import Archive from "./views/Archive";
 import NewEntry from "./views/NewEntry";
 import Entry from "./views/Entry";
-import Nav from "./components/Nav/Nav.jsx";
+import Layout from "./components/Layout/Layout.jsx";
 import EntryNotFound from "./views/EntryNotFound.jsx";
-
-function Layout() {
-  return (
-    <>
-      <Nav />
-      <Outlet />
-    </>
-  );
-}
 
 const router = createBrowserRouter([
   {
