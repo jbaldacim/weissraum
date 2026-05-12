@@ -1,8 +1,8 @@
 export function createEntry(data) {
   return {
     id: crypto.randomUUID(),
-    createdAt: Temporal.Now.instant().toString(),
-    updatedAt: Temporal.Now.instant().toString(),
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
 
     assumption: "",
     category: "",
@@ -27,7 +27,7 @@ export function updateEntry(entry, updates) {
   return {
     ...entry,
     ...updates,
-    updatedAt: Temporal.Now.instant().toString(),
+    updatedAt: new Date().toISOString(),
   };
 }
 

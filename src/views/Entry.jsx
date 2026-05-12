@@ -102,9 +102,7 @@ function Entry() {
             <DateBlock>
               <Label as="span">Logged</Label>
               <Caption>
-                {Temporal.Instant.from(savedEntry.createdAt)
-                  .toZonedDateTimeISO("UTC")
-                  .toLocaleString()}
+                {new Date(savedEntry.createdAt).toLocaleDateString()}
               </Caption>
             </DateBlock>
           </MetaRow>
