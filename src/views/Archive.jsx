@@ -11,7 +11,14 @@ import { getEntries, getCategories } from "../api/entries";
 import styled from "styled-components";
 
 const ALL_CATEGORIES = "__all__";
+const ALL_STATUSES = "__all__";
 const PAGE_SIZE = 10;
+
+const FilterRow = styled.div`
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-sm);
+`;
 
 const PaginationRow = styled.div`
   display: flex;
@@ -23,11 +30,14 @@ function Archive() {
   const [entries, setEntries] = useState([]);
   const [categories, setCategories] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState(ALL_CATEGORIES);
+  const [selectedStatus, setSelectedStatus] = useState(ALL_STATUSES);
   const [page, setPage] = useState(1);
   const [total, setTotal] = useState(0);
 
   const categoryId =
     selectedCategory === ALL_CATEGORIES ? null : selectedCategory;
+  const statusFilter =
+    selectedStatus === ALL_STATUSES ? null : selectedStatus;
 
   useEffect(() => {
     getCategories().then(setCategories);
@@ -35,15 +45,20 @@ function Archive() {
 
   useEffect(() => {
     async function fetchEntries() {
-      const data = await getEntries(categoryId, page, PAGE_SIZE);
+      const data = await getEntries(categoryId, statusFilter, page, PAGE_SIZE);
       setEntries(data.entries);
       setTotal(data.total);
     }
     fetchEntries();
-  }, [categoryId, page]);
+  }, [categoryId, statusFilter, page]);
 
   function handleCategoryChange(value) {
     setSelectedCategory(value);
+    setPage(1);
+  }
+
+  function handleStatusChange(value) {
+    setSelectedStatus(value);
     setPage(1);
   }
 
@@ -54,11 +69,17 @@ function Archive() {
     ...categories.map((cat) => ({ label: cat.name, value: cat.id.toString() })),
   ];
 
+  const statusOptions = [
+    { label: "All statuses", value: ALL_STATUSES },
+    { label: "Resolved", value: "resolved" },
+    { label: "Unresolved", value: "unresolved" },
+  ];
+
   return (
     <Container>
       <Stack>
         <SectionHeader label="Archive" heading="Your thoughts" />
-        <div>
+        <FilterRow>
           <Select
             label="Filter by category"
             value={selectedCategory}
@@ -66,7 +87,14 @@ function Archive() {
             options={categoryOptions}
             placeholder="All categories"
           />
-        </div>
+          <Select
+            label="Filter by status"
+            value={selectedStatus}
+            onValueChange={handleStatusChange}
+            options={statusOptions}
+            placeholder="All statuses"
+          />
+        </FilterRow>
         <Grid>
           {entries.map((entry) => (
             <Col $span={6} key={entry.id}>

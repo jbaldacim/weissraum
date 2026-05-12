@@ -14,9 +14,10 @@ export async function getCategories() {
   return res.json();
 }
 
-export async function getEntries(categoryId = null, page = 1, limit = 10) {
+export async function getEntries(categoryId = null, status = null, page = 1, limit = 10) {
   const params = new URLSearchParams();
   if (categoryId) params.set("category", categoryId);
+  if (status) params.set("status", status);
   params.set("page", page);
   params.set("limit", limit);
   const res = await fetch(`/api/entries?${params}`);
