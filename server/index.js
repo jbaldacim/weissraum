@@ -279,7 +279,7 @@ app.get("/api/categories", (req, res) => {
 
 // Get all entries with their category names, ordered by creation date descending
 app.get("/api/entries", (req, res) => {
-  const { category, status, page = "1", limit = "10" } = req.query;
+  const { category, status, search, page = "1", limit = "10" } = req.query;
   const pageNum = Math.max(1, parseInt(page, 10) || 1);
   const limitNum = Math.max(1, Math.min(100, parseInt(limit, 10) || 10));
   const offset = (pageNum - 1) * limitNum;
@@ -290,6 +290,13 @@ app.get("/api/entries", (req, res) => {
   if (category) {
     conditions.push("e.category_id = ?");
     params.push(category);
+  }
+
+  if (search) {
+    conditions.push(
+      "(e.assumption || ' ' || e.experiment || ' ' || e.predictions || ' ' || e.possible_problems || ' ' || e.strategies || ' ' || e.what_happened || ' ' || e.results_vs_predictions || ' ' || e.unexpected_outcomes || ' ' || e.coping_strategies || ' ' || e.alternative_assumption) LIKE ?",
+    );
+    params.push(`%${search}%`);
   }
 
   if (status === "resolved") {

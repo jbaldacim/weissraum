@@ -7,12 +7,14 @@ import SectionHeader from "../components/SectionHeader/SectionHeader";
 import Select from "../components/Select/Select";
 import { GhostButton } from "../components/Button/Button";
 import { Caption } from "../components/Typography/Text";
+import FloatingLabelField from "../components/Form/FloatingLabelField";
 import { getEntries, getCategories } from "../api/entries";
 import styled from "styled-components";
 
 const ALL_CATEGORIES = "__all__";
 const ALL_STATUSES = "__all__";
 const PAGE_SIZE = 10;
+const SEARCH_DEBOUNCE = 300;
 
 const FilterRow = styled.div`
   display: grid;
@@ -31,6 +33,8 @@ function Archive() {
   const [categories, setCategories] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState(ALL_CATEGORIES);
   const [selectedStatus, setSelectedStatus] = useState(ALL_STATUSES);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [debouncedSearch, setDebouncedSearch] = useState("");
   const [page, setPage] = useState(1);
   const [total, setTotal] = useState(0);
 
@@ -44,13 +48,27 @@ function Archive() {
   }, []);
 
   useEffect(() => {
+    const timer = setTimeout(
+      () => setDebouncedSearch(searchQuery),
+      SEARCH_DEBOUNCE,
+    );
+    return () => clearTimeout(timer);
+  }, [searchQuery]);
+
+  useEffect(() => {
     async function fetchEntries() {
-      const data = await getEntries(categoryId, statusFilter, page, PAGE_SIZE);
+      const data = await getEntries(
+        categoryId,
+        statusFilter,
+        debouncedSearch || null,
+        page,
+        PAGE_SIZE,
+      );
       setEntries(data.entries);
       setTotal(data.total);
     }
     fetchEntries();
-  }, [categoryId, statusFilter, page]);
+  }, [categoryId, statusFilter, debouncedSearch, page]);
 
   function handleCategoryChange(value) {
     setSelectedCategory(value);
@@ -59,6 +77,11 @@ function Archive() {
 
   function handleStatusChange(value) {
     setSelectedStatus(value);
+    setPage(1);
+  }
+
+  function handleSearchChange(value) {
+    setSearchQuery(value);
     setPage(1);
   }
 
@@ -95,6 +118,12 @@ function Archive() {
             placeholder="All statuses"
           />
         </FilterRow>
+        <FloatingLabelField
+          label="Text search"
+          id="search"
+          value={searchQuery}
+          onChange={(e) => handleSearchChange(e.target.value)}
+        />
         <Grid>
           {entries.map((entry) => (
             <Col $span={6} key={entry.id}>
