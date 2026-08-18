@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useState } from "react";
 import {
   useLoaderData,
   useParams,
@@ -17,7 +17,6 @@ import {
 } from "../components/Layout/EntryComponents";
 import SectionHeader from "../components/SectionHeader/SectionHeader";
 import Divider from "../components/Divider/Divider";
-import FloatingLabelField from "../components/Form/FloatingLabelField";
 import FloatingLabelTextArea from "../components/Form/FloatingLabelTextArea";
 import { Heading, Caption, Label } from "../components/Typography/Text";
 import { CategoryTag, StatusTag } from "../components/Tag/Tag";
@@ -25,6 +24,7 @@ import { Tags } from "../components/Card/AssumptionCard";
 import { PrimaryButton, GhostButton } from "../components/Button/Button";
 import BackButton from "../components/Nav/BackButton";
 import { updateEntry, isEntryResolved } from "../domain/entry";
+import { updateEntry as updateEntryAPI } from "../api/entries";
 
 function Entry() {
   const { id } = useParams();
@@ -37,12 +37,35 @@ function Entry() {
   const [savedEntry, setSavedEntry] = useState(entry);
   const [draft, setDraft] = useState({ ...entry });
 
+  const [isSaving, setIsSaving] = useState(false);
+
   function updateField(field, value) {
     setDraft((prev) => updateEntry(prev, { [field]: value }));
   }
 
-  function handleSave() {
-    setSavedEntry(draft);
+  async function handleSave() {
+    setIsSaving(true);
+    try {
+      const updated = await updateEntryAPI(draft.id, {
+        category: draft.category,
+        experiment: draft.experiment,
+        predictions: draft.predictions,
+        possibleProblems: draft.possibleProblems,
+        strategies: draft.strategies,
+        whatHappened: draft.whatHappened,
+        resultsVsPredictions: draft.resultsVsPredictions,
+        unexpectedOutcomes: draft.unexpectedOutcomes,
+        copingStrategies: draft.copingStrategies,
+        alternativeAssumption: draft.alternativeAssumption,
+      });
+      setSavedEntry(updated);
+      setDraft(updated);
+    } catch (error) {
+      console.error("Failed to save entry", error);
+      alert("Save failed. Check console.");
+    } finally {
+      setIsSaving(false);
+    }
   }
 
   function handleDiscard() {
@@ -63,9 +86,9 @@ function Entry() {
           }
         >
           <SectionHeader
-            label="Entry"
-            heading="Review and revise this thought"
-            lead="Keep the whole entry editable, then save or discard your changes."
+            label="Assumption"
+            heading={savedEntry.assumption}
+            lead="Everything below can be edited and saved."
           />
 
           <MetaRow>
@@ -79,28 +102,18 @@ function Entry() {
             <DateBlock>
               <Label as="span">Logged</Label>
               <Caption>
-                {Temporal.Instant.from(savedEntry.createdAt)
-                  .toZonedDateTimeISO("UTC")
-                  .toLocaleString()}
+                {new Date(savedEntry.createdAt).toLocaleDateString()}
               </Caption>
             </DateBlock>
           </MetaRow>
         </HeaderBlock>
 
-        <Grid>
-          <Col $span={8}>
-            <FloatingLabelField
-              label="Tested assumption"
-              id="assumption"
-              value={draft.assumption}
-              onChange={(e) => updateField("assumption", e.target.value)}
-            />
-          </Col>
-        </Grid>
-
         <ButtonRow>
-          <PrimaryButton onClick={handleSave} disabled={!hasChanges}>
-            Save changes
+          <PrimaryButton
+            onClick={handleSave}
+            disabled={!hasChanges || isSaving}
+          >
+            {isSaving ? "Saving" : "Save changes"}
           </PrimaryButton>
 
           <GhostButton onClick={handleDiscard} disabled={!hasChanges}>

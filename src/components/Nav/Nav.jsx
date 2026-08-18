@@ -35,9 +35,9 @@ const StyledNavLink = styled(NavLink)`
 function Nav() {
   return (
     <Wrapper>
-      <StyledNavLink to="/">Home</StyledNavLink>
-      <StyledNavLink to="/archive">Archive</StyledNavLink>
-      <StyledNavLink to="/entries/new">New Entry</StyledNavLink>
+      <StyledNavLink to="/" viewTransition>Home</StyledNavLink>
+      <StyledNavLink to="/archive" viewTransition>Archive</StyledNavLink>
+      <StyledNavLink to="/entries/new" viewTransition>New Entry</StyledNavLink>
     </Wrapper>
   );
 }
